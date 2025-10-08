@@ -2,13 +2,14 @@ import { useEffect, useState } from "react"
 
 const Register = () => {
 
-    const URL = "coloca tu endpoint aqui"
+    const URL = "http://localhost:8000/api/usuarios/"
+
     const [ formData, setFormData ] = useState({
         nombre: "",
         apellido: "",
         email: "",
-        password: "",
-        gender: "",
+        clave: "",
+        genero: "",
         rol: ""
     })
 
@@ -18,35 +19,32 @@ const Register = () => {
             nombre: e.currentTarget.nombreR.value.trim(),
             apellido: e.currentTarget.apellidoR.value.trim(),
             email: e.currentTarget.emailR.value.trim(),
-            gender: e.currentTarget.passwordR.value.trim(),
-            password: e.currentTarget.generoR.value.trim(),
+            genero: e.currentTarget.generoR.value.trim(),
+            clave: e.currentTarget.passwordR.value.trim(),
             rol: e.currentTarget.rolR.value.trim()
         })
     }
 
     useEffect(() => {
-        if(formData.email !== "" && formData.password !== "" && formData.realname !== "" && formData.username !== ""){
-            //descomentar esto cuando se tenga el endpoint y aplicar la logica necesaria para gestionar los datos traidos del backend
-            // const sendData = async () =>{
-            //     try{
-            //         const respuesta = await fetch(URL, {
-            //             method: "POST",
-            //             headers: {"Content-Type": "application/json"},
-            //             body: JSON.stringify(formData)
-            //         })
-            //         if(!respuesta.ok){ {
-            //                 const errorData = await respuesta.json()
-            //                 console.error("Ha ocurrido el siguiente problema", errorData)
-            //         }}
-            //         const data = await respuesta.json()
-            //         console.log("Los datos recibidos son:", data)
-            //     }catch(err){
-            //         console.log("Ha ocurrido un error no documentado: ",err)
-            //     }
-            // }
-            // sendData();
-            console.log(formData)
+        const sendData = async () =>{
+            try{
+                const respuesta = await fetch(URL, {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify(formData)
+                })
+                if(!respuesta.ok){ {
+                        const errorData = await respuesta.json()
+                        console.error("Ha ocurrido el siguiente problema", errorData)
+                }}
+                const data = await respuesta.json()
+                console.log("Los datos recibidos son:", data)
+            }catch(err){
+                console.log("Ha ocurrido un error no documentado: ",err)
+            }
         }
+        sendData();
+        console.log(formData)
     },[formData])
 
     return(
@@ -64,14 +62,14 @@ const Register = () => {
                         <input type="password" name="passwordR" id="passwordR" placeholder="Ingresa tu contraseña" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-2xl w-full h-auto p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required />
                         <select name="generoR" id="generoR" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-2xl w-full h-auto p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required >
                             <option value="">Selecciona tu género</option>
-                            <option value="Masculino">Masculino</option>
-                            <option value="Femenino">Femenino</option>
+                            <option value="masculino">masculino</option>
+                            <option value="femenino">femenino</option>
                         </select>
                         <select name="RolR" id="rolR" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-2xl w-full h-auto p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" required >
                             <option value="">Selecciona tu rol</option>
-                            <option value="Estudiante">Estudiante</option>
-                            <option value="Profesor">Profesor</option>
-                            <option value="Administrador">Administrador</option>
+                            <option value="estudiante">estudiante</option>
+                            <option value="profesor">profesor</option>
+                            <option value="administrador">administrador</option>
                         </select>
                     <button type="submit" className="w-full h-fit p-2 rounded-2xl text-white bg-gray-900 hover:bg-slate-800 text-center">Registrate</button>
                     <a href="#" className="text-sm w-full text-center font-medium text-primary-600 hover:underline text-white dark:text-primary-500 ml-2">¿Ya tienes cuenta?</a>
