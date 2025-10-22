@@ -3,59 +3,59 @@ from .models import UsuarioPersonalizado
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
+
 class RegistroSerializer(serializers.ModelSerializer):
-
     password = serializers.CharField(write_only=True)
-    first_name = serializers.CharField(required=False, allow_blank=True)
-
+    full_name = serializers.CharField(required=False, allow_blank=True)
     class Meta:
         model = UsuarioPersonalizado
-        fields = ("email", "first_name", "last_name", "password", "gender", "rol")
+        fields = ("username", "email", "full_name", "password", "gender")
         extra_kwargs = {
-            'contraseña': {'write_only': True}
+            'password': {'write_only': True}
         }
-
     def create(self, validated_data):
         password = validated_data.pop("password")
         user = UsuarioPersonalizado(**validated_data)
         user.set_password(password)
-        if not user.username:  # opcional: generar uno interno
-            import uuid
-            user.username = str(uuid.uuid4())[:8]
         user.save()
         return user
-    
+
 
 class LoginSerializer(serializers.Serializer):
-    email = serializers.CharField()
+    username = serializers.CharField()
     password = serializers.CharField(write_only=True)
 
     def validate(self, attrs):
-        user = authenticate(username=attrs.get("email"), password=attrs.get("password"))
+        user = authenticate(username=attrs.get("username"), password=attrs.get("password"))
         if not user:
             raise serializers.ValidationError("Credenciales inválidas.")
         attrs["user"] = user
         return attrs
-    
+
 
 class UserPublicSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsuarioPersonalizado
-        fields = ("id", "email", "first_name")
+        fields = ("id", "username", "email", "full_name")
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        token["rol"] = getattr(user, "rol", None)
-        token["email"] = user.email
+        token["role"] = getattr(user, "role", None)
+        token["username"] = user.username
+        token["id"] = user.id
         return token
 
     def validate(self, attrs):
         data = super().validate(attrs)
-        data["rol"] = getattr(self.user, "rol", None)
-        data["email"] = self.user.email
+        data.update({
+            "role": getattr(self.user, "role", None),
+            "username": self.user.username,
+            "gender": self.user.gender,
+            "full_name": self.user.full_name,
+        })
         return data
     
 
@@ -65,8 +65,8 @@ class UsuarioPersonalizadoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsuarioPersonalizado
         fields = [
-            "id", "username", "first_name", "last_name",
-            "email", "role", "password",
+            "id", "username", "full_name",
+            "email", "role", "password", "gender",
             "is_active", "last_login", "date_joined",
         ]
         read_only_fields = ["id", "last_login", "date_joined"]  # is_active lo controlamos por rol abajo

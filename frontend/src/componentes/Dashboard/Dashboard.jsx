@@ -1,16 +1,9 @@
 import Sidebar from "./Sidebar"
 import ProfileCard from "./ProfileCard"
-import { useState } from "react"
-
+import { useState, useContext } from "react"
+import { UsuarioContext } from "../useContext/UsuarioContext"
 const Dashboard = () => {
-
-    // Datos de ejemplo
-    const [user] = useState({
-        nombre: "Martín Gómez",
-        email: "martin@ejemplo.com",
-        rol: "Alumno"
-    })
-
+    const { usuario, setUsuario } = useContext(UsuarioContext);
     const [asignaturas] = useState([
         "Matemáticas",
         "Física",
@@ -24,8 +17,18 @@ const Dashboard = () => {
             <main className="flex-1 p-6">
                 <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
                     Dashboard
+                <button onClick={() => setUsuario((prev) => (prev, ""))} className='bg-gray-600 text-lg rounded-2xl p-2 ml-2 hover:bg-gray-400 absolute top-5 right-5'>
+                    Cerrar sesión
+                </button>
                 </h1>
-                <ProfileCard user={user} />
+                <section className="flex items-center justify-center h-60">
+                <h2 className='text-white text-2xl'>
+                    {usuario.gender === "M"
+                        ? `Bienvenido ${usuario.full_name}`
+                        : `Bienvenida ${usuario.full_name}`}
+                </h2>
+                </section>
+                <ProfileCard />
                 <section className="mt-8">
                     <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">Asignaturas</h2>
                     <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
@@ -34,7 +37,7 @@ const Dashboard = () => {
                                 {asig}
                             </li>
                         ))}
-                    </ul>
+                    </ul> 
                 </section>
             </main>
         </div>

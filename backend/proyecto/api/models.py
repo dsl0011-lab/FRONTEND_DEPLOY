@@ -2,33 +2,33 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 class UsuarioPersonalizado(AbstractUser):
-    username = models.CharField(max_length=150, blank=True, null=True)  # ahora opcional
-    email = models.EmailField(unique=True)
-
-    class gender(models.TextChoices):
-        MALE = 'M', 'Masculino',
-        FEMALE = 'F', 'Femenino',
-    
-    gender = models.CharField(
-        max_length=1,
-        choices=gender.choices,
-        default=gender.MALE
-    )
+    """
+    Modelo de usuario personalizado extendiendo AbstractUser.
+    """
+    full_name = models.CharField(max_length=150, blank=True)
+    email = models.EmailField(unique=True, null=True, blank=True)
 
     #roles
-    class rol(models.TextChoices):
+    class Role(models.TextChoices):
         ADMIN = "A", "Administrador"
-        TEACHER = "P", "Profesor"
-        STUDENT = "E", "Estudiante"
+        TEACHER = "T", "Profesor"
+        STUDENT = "S", "Alumno"
 
-    rol = models.CharField(
-        max_length=1,
-        choices=rol.choices,
-        default=rol.STUDENT
+    role = models.CharField(
+        max_length=20,
+        choices=Role.choices,
+        default=Role.STUDENT
     )
 
-    USERNAME_FIELD = 'email'          # <- Clave para JWT y Django login
-    REQUIRED_FIELDS = ['first_name', "rol"]  # Campos obligatorios para crear superuser
+    class Gender(models.TextChoices):
+        Male = "M", "masculino"
+        Female = "F", "femenino"
+
+    gender = models.CharField(
+        max_length=20,
+        choices=Gender.choices,
+    )
 
     def __str__(self):
-        return f"{self.name} {self.last_name} ({self.role})"
+        return f"{self.username} ({self.role})"
+

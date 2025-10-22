@@ -3,17 +3,17 @@ import { useCallback, useEffect, useState } from "react";
 const Login = ({ setFlipped, funcUsuario }) => {
 
     //cambiar URL del endpoint en cuestion
-    const URL = "http://localhost:8000/api/login/"
+    const URL = "http://localhost:8000/api/auth/token/"
 
     const [form, setForm] = useState({
-        email: "",
+        username: "",
         password: ""
     })
 
     const saveForm = useCallback((e) => {
         e.preventDefault();
         setForm({
-            email: e.target.emailL.value,
+            username: e.target.usernameR.value,
             password: e.target.passwordL.value
         })
     }, [])
@@ -34,8 +34,6 @@ const Login = ({ setFlipped, funcUsuario }) => {
                         console.error(respuestaFallida)
                     }
                     const data = await datosEnviados.json()
-                    //datos recibidos
-                    console.log(data)
                     funcUsuario(data, data.access)
                 } catch (e) {
                     console.error("Ha ocurrido un error", e)
@@ -50,7 +48,7 @@ const Login = ({ setFlipped, funcUsuario }) => {
         <>
             <h1 className="text-2xl font-bold w-full h-fit leading-tight tracking-tight dark:text-white p-2">Inicio de Sesión</h1>
             <form onSubmit={(e) => saveForm(e)} className="w-full h-full flex flex-col items-center justify-center gap-6 py-5 text-sm sm:text-base">
-                <input type="email" name="emailL" id="emailL" placeholder="Ingresa tu email" className="text-white bg-gray-50 border border-gray-300 rounded-2xl w-full max-w-60 sm:max-w-96 h-auto p-1.5 sm:p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" required />
+                <input type="text" name="usernameR" id="usernameR" placeholder="Ingresa nick/username" className="text-white bg-gray-50 border border-gray-300 rounded-2xl w-full max-w-60 sm:max-w-96 h-auto p-1.5 sm:p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" required />
                 <input type="password" name="passwordL" id="passwordL" placeholder="Ingresa tu contraseña" className="text-white bg-gray-50 border border-gray-300 rounded-2xl w-full max-w-60 sm:max-w-96 h-auto p-1.5 sm:p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" required />
                 {/* Inicio de sesión con JWT */}
                 {/* colocar un onclick con savePassword */}
