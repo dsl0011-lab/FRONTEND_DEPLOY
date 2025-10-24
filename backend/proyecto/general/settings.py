@@ -21,6 +21,9 @@ SECRET_KEY = 'django-insecure-s3fhyx5h^4z(4k9wgwzw0g()-&bbeipm1pk87!&*-4#k!i-mc-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Configuración de Simple JWT
+from datetime import timedelta
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -79,8 +82,8 @@ DATABASES = {
         # "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
         # "PORT": os.environ.get("POSTGRES_PORT", "5432"),
             "NAME": "semana3",
-            "USER": "postgres",
-            "PASSWORD": "1234",
+            "USER": "danos",
+            "PASSWORD": "1601",
             "HOST": "localhost",
             "PORT": "5432"
     }
@@ -92,11 +95,21 @@ AUTH_USER_MODEL = "api.UsuarioPersonalizado"
 # --- DRF / JWT ---
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
+        "api.authentication.CookieJWTAuthentication", 
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
     "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.AllowAny",
+        "rest_framework.permissions.IsAuthenticated",
     ),
+}
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "AUTH_HEADER_TYPES": ("Bearer",),
+    "AUTH_COOKIE": "jwt",          # nombre de la cookie
+    "AUTH_COOKIE_HTTP_ONLY": True, # evita que JS lea el token
+    "AUTH_COOKIE_SECURE": False,   # True si usas HTTPS
 }
 
 
@@ -136,6 +149,7 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
+CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
@@ -146,7 +160,6 @@ CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1:5173",
 ]
 
-CORS_ALLOW_CREDENTIALS = True
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "http://localhost:5173/"]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
