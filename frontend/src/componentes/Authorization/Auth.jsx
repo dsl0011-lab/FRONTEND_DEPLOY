@@ -1,10 +1,18 @@
 import Register from './Registro'
 import Login from './Login'
 import Logo from '../../assets/logo-2.png'
-import { useState } from 'react'
+import { UsuarioContext } from '../useContext/UsuarioContext'
+import { useState, useCallback, useContext } from 'react'
 
-const Auth = ({ funcUsuario }) => {
+const Auth = () => {
     const [ flipped, setFlipped ] = useState(false);
+
+    const { setUsuario } = useContext(UsuarioContext)
+    const funcUsuario = useCallback((informacion) => {
+        console.log(informacion)
+        if(informacion) setUsuario(() => informacion)
+    },[setUsuario])
+    
 
     return (
         <section className='relative [perspective:1000px] w-[90vw] max-w-[600px]  h-[95vh] max-h-[600px] sm:max-h[400] flex justify-center items-center flex-col'>

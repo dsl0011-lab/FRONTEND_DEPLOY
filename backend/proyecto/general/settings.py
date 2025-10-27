@@ -1,7 +1,10 @@
 import os
-from pathlib import Path
 from dotenv import load_dotenv
+from pathlib import Path
 
+# --- Rutas base ---
+BASE_DIR = Path(__file__).resolve().parent.parent  # .../backend/proyecto
+load_dotenv(BASE_DIR / ".env")
 
 load_dotenv()
 
@@ -74,18 +77,12 @@ ASGI_APPLICATION = 'general.asgi.application'
 
 DATABASES = {
     "default": {
-        # ACTUALMENTE HAY PROBLEMAS COMO EL SERVER SE CONECTA A LA BD, PETA CON EL .ENV REVISAR!
         "ENGINE": "django.db.backends.postgresql",
-        # "NAME": os.environ.get("POSTGRES_DB", "semana3"),
-        # "USER": os.environ.get("POSTGRES_USER", "postgres"),
-        # "PASSWORD": os.environ.get("POSTGRES_PASSWORD", "1234"),
-        # "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
-        # "PORT": os.environ.get("POSTGRES_PORT", "5432"),
-            "NAME": "semana3",
-            "USER": "danos",
-            "PASSWORD": "1601",
-            "HOST": "localhost",
-            "PORT": "5432"
+        "NAME": os.getenv("POSTGRES_DB", "semana3_utf8"),
+        "USER": os.getenv("POSTGRES_USER", "postgres"),
+        "PASSWORD": os.getenv("POSTGRES_PASSWORD", "1601"),
+        "HOST": os.getenv("POSTGRES_HOST", "127.0.0.1"),
+        "PORT": os.getenv("POSTGRES_PORT", "5432"),
     }
 }
 
@@ -150,6 +147,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 CORS_ALLOW_CREDENTIALS = True
+
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",

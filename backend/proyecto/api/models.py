@@ -5,7 +5,6 @@ class UsuarioPersonalizado(AbstractUser):
     """
     Modelo de usuario personalizado extendiendo AbstractUser.
     """
-    full_name = models.CharField(max_length=150, blank=True)
     email = models.EmailField(unique=True, null=True, blank=True)
 
     #roles
@@ -27,8 +26,8 @@ class UsuarioPersonalizado(AbstractUser):
     gender = models.CharField(
         max_length=20,
         choices=Gender.choices,
+        blank=True
     )
-
     def __str__(self):
-        return f"{self.username} ({self.role})"
+        return f"{self.username} ({self.get_role_display()})"
 

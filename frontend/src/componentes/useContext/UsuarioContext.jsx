@@ -8,6 +8,7 @@ export default function UsuarioProvider({ children }) {
         email: "",
         gender: "",
         rol: "",
+        username: ""
     });
 
     return (

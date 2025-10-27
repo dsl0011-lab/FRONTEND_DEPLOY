@@ -24,8 +24,8 @@ const Dashboard = ({ funcUsuario }) => {
                 <section className="flex items-center justify-center h-60">
                 <h2 className='text-white text-2xl'>
                     {usuario.gender === "M"
-                        ? `Bienvenido ${usuario.full_name}`
-                        : `Bienvenida ${usuario.full_name}`}
+                        ? `Bienvenido ${usuario.first_name} ${usuario.last_name}`
+                        : `Bienvenida ${usuario.first_name} ${usuario.last_name}`}
                 </h2>
                 </section>
                 <ProfileCard funcUsuario={funcUsuario}/>

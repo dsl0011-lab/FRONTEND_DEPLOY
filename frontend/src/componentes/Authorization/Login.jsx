@@ -34,7 +34,8 @@ const Login = ({ setFlipped, funcUsuario }) => {
                         console.error(respuestaFallida)
                     }
                     const data = await datosEnviados.json()
-                    funcUsuario(data, data.access)
+                    console.log(data)
+                    funcUsuario(data)
                 } catch (e) {
                     console.error("Ha ocurrido un error", e)
                 }

@@ -1,13 +1,19 @@
+# backend/proyecto/api/admin.py
 from django.contrib import admin
+from django.contrib.auth.admin import UserAdmin
 from .models import UsuarioPersonalizado
 
 @admin.register(UsuarioPersonalizado)
-class UsuarioAdmin(admin.ModelAdmin):
-    list_display = ("username", "email", "role", "is_staff", "is_active")
-    list_filter = ("role", "is_staff", "is_active")
-    search_fields = ("username", "email")
-    fieldsets = (
-        (None, {"fields": ("username", "password")}),
-        ("Info", {"fields": ("full_name", "email", "role")}),
-        ("Permisos", {"fields": ("is_active","is_staff","is_superuser","groups","user_permissions")}),
+class UsuarioPersonalizadoAdmin(UserAdmin):
+    list_display = ("username", "email", "role", "is_staff", "is_superuser")
+    list_filter = ("role", "is_staff", "is_superuser")
+    fieldsets = UserAdmin.fieldsets + (
+        ("Rol", {"fields": ("role",)}),
     )
+
+    def get_readonly_fields(self, request, obj=None):
+        base = super().get_readonly_fields(request, obj)
+        if not request.user.is_superuser:
+            return base + ("role",)
+        return base
+

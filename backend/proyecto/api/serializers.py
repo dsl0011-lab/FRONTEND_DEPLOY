@@ -1,21 +1,26 @@
+# backend/proyecto/api/serializers.py
 from rest_framework import serializers
-from .models import UsuarioPersonalizado
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+from .models import UsuarioPersonalizado
 
 
 class RegistroSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
-    full_name = serializers.CharField(required=False, allow_blank=True)
+    role = serializers.CharField(read_only=True)  # se devuelve, pero NO se acepta
+
     class Meta:
         model = UsuarioPersonalizado
-        fields = ("username", "email", "full_name", "password", "gender")
+        fields = ("username", "email", "first_name", "last_name", "password", "gender", "role")
         extra_kwargs = {
-            'password': {'write_only': True}
+            "password": {"write_only": True},
+            "email": {"required": True},   # cambia a False si no quieres obligarlo
         }
     def create(self, validated_data):
+        validated_data.pop("role", None)  # ignora cualquier intento de colar role
         password = validated_data.pop("password")
         user = UsuarioPersonalizado(**validated_data)
+        user.role = UsuarioPersonalizado.Role.STUDENT  # <- fuerza "S"
         user.set_password(password)
         user.save()
         return user
@@ -35,7 +40,7 @@ class LoginSerializer(serializers.Serializer):
 class UserPublicSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsuarioPersonalizado
-        fields = ("id", "username", "email", "full_name")
+        fields = ("id", "username", "email")
 
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -52,11 +57,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data.update({
             "role": getattr(self.user, "role", None),
             "username": self.user.username,
-            "gender": self.user.gender,
-            "full_name": self.user.full_name,
+            "gender": self.user.gender
         })
         return data
-    
+
 
 class UsuarioPersonalizadoSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=False, min_length=8, allow_blank=False)
@@ -64,22 +68,26 @@ class UsuarioPersonalizadoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsuarioPersonalizado
         fields = [
-            "id", "username", "full_name",
+            "id", "username", "first_name", "last_name",
             "email", "role", "password", "gender",
             "is_active", "last_login", "date_joined",
         ]
-        read_only_fields = ["id", "last_login", "date_joined"]  # is_active lo controlamos por rol abajo
+        read_only_fields = ["id", "last_login", "date_joined", "role"]
+        extra_kwargs = {
+            "email": {"required": False},
+            "username": {"required": False},
+        }
 
-    # ----- helpers -----
     def _is_admin(self):
         request = self.context.get("request")
         user = getattr(request, "user", None)
-        return bool(user and (user.is_superuser or getattr(user, "role", None) == "ADMIN"))
+        # Usa SIEMPRE el enum (tu "ADMIN" es "A")
+        return bool(user and (user.is_superuser or getattr(user, "role", None) == UsuarioPersonalizado.Role.ADMIN))
 
-    # ----- create -----
     def create(self, validated_data):
         password = validated_data.pop("password", None)
-        # Solo ADMIN puede asignar role / is_active al crear
+
+        # Bloqueo extra por si te entran role/is_active
         if (("role" in validated_data) or ("is_active" in validated_data)) and not self._is_admin():
             raise serializers.ValidationError({"detail": "Solo ADMIN puede asignar rol o activar/desactivar usuarios."})
 
@@ -91,21 +99,26 @@ class UsuarioPersonalizadoSerializer(serializers.ModelSerializer):
         user.save()
         return user
 
-    # ----- update -----
     def update(self, instance, validated_data):
         password = validated_data.pop("password", None)
 
-        # Si intentan cambiar role o is_active sin ser ADMIN → error
-        if ("role" in validated_data or "is_active" in validated_data) and not self._is_admin():
+        # Cambios de role/is_active solo admin
+        if (("role" in validated_data) or ("is_active" in validated_data)) and not self._is_admin():
             raise serializers.ValidationError({"detail": "Solo ADMIN puede cambiar rol o estado del usuario."})
 
-        # Actualiza campos normales
+        # Si quieres obligar a usar SIEMPRE el endpoint set-role incluso para superuser, descomenta:
+        # validated_data.pop("role", None)
+
         for attr, value in validated_data.items():
             setattr(instance, attr, value)
 
-        # Cambiar contraseña correctamente
         if password:
             instance.set_password(password)
 
         instance.save()
         return instance
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        data["role_label"] = instance.get_role_display()  # "Administrador", "Profesor", "Alumno"
+        return data
