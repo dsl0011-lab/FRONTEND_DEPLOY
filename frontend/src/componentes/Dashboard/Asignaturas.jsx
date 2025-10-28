@@ -10,15 +10,15 @@ function Asignaturas() {
     ])
 
     return (
-            <section className="mt-8 text-white">
-            <h2 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
+            <section className=" text-white dark:bg-gray-800 p-6 rounded-lg shadow">
+            <h2 className="text-sl font-semibold mb-4 text-gray-800 dark:text-gray-200">
                 Asignaturas
             </h2>
             <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                 {asignaturas.map((asig, i) => (
                     <li
                         key={i}
-                        className="p-4 bg-white dark:bg-gray-800 rounded-lg shadow flex justify-between items-center"
+                        className="p-4 bg-white dark:bg-slate-900 rounded-lg shadow flex justify-between items-center"
                     >
                         {asig}
                         <button

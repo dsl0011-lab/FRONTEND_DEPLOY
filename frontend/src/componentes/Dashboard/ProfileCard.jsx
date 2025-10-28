@@ -55,7 +55,7 @@ const ProfileCard = () => {
 
     return (
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-white">
-            <h3 className="w-full h-12 text-lg font-bold text-gray-900 dark:text-white">Perfil</h3>
+            <h2 className="w-full h-12 text-lg font-bold text-gray-900 dark:text-white">Perfil</h2>
             {!editing ? (
                 !usuario ? <p>Cargando datos...</p>
                     :

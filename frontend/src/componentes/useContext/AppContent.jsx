@@ -2,7 +2,7 @@ import Dashboard from '../Dashboard/Dashboard';
 import PrivateRoute from '../Authorization/PrivateRoute';
 import { Route, Routes } from 'react-router-dom';
 import ProfileCard from '../Dashboard/ProfileCard';
-import Inicio from '../Dashboard/Inicio';
+import Asignaturas from '../Dashboard/Asignaturas';
 
 function AppContent() {
 
@@ -11,8 +11,8 @@ function AppContent() {
             <Routes>
                 <Route element={<PrivateRoute />}>
                     <Route path='/*' element={<Dashboard />}>
-                        {/* <Route path='Inicio' element={<Inicio />} /> */}
                         <Route path='perfil' element={<ProfileCard />} />
+                        <Route path='asignaturas' element={<Asignaturas />} />
                     </Route>
                 </Route>
             </Routes>
