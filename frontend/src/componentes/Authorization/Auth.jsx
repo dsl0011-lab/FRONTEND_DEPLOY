@@ -3,18 +3,20 @@ import Login from './Login'
 import Logo from '../../assets/logo-2.png'
 import { UsuarioContext } from '../useContext/UsuarioContext'
 import { useState, useCallback, useContext } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const Auth = () => {
     const [ flipped, setFlipped ] = useState(false);
-
     const { setUsuario } = useContext(UsuarioContext)
-    const funcUsuario = useCallback((informacion) => {
-        console.log(informacion)
-        if(informacion) setUsuario(() => informacion)
-    },[setUsuario])
-    
+    const navigate = useNavigate();
 
-    return (
+    const funcUsuario = useCallback((informacion) => {
+        if(informacion) setUsuario(() => informacion)
+        navigate('/', { replace: true }); // 👈 redirige al dashboard
+    },[setUsuario, navigate])
+
+    return ( 
+    <div className='w-screen h-screen overflow-hidden flex justify-center flex-col items-center bg-gradient-to-t from-gray-400 to-black box-border'>
         <section className='relative [perspective:1000px] w-[90vw] max-w-[600px]  h-[95vh] max-h-[600px] sm:max-h[400] flex justify-center items-center flex-col'>
             <img src={Logo} className='w-[120px] h-[75px] max-w-72 max-h-56 object-cover p-2 sm:w-fit sm:h-fit' />
             {/* // tarjeta principal del flipped */}
@@ -31,6 +33,7 @@ const Auth = () => {
                 </div>
             </article>
         </section>
+    </div>
     )
 }
 

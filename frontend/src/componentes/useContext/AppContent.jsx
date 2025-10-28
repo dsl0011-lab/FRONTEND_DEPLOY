@@ -1,27 +1,22 @@
-import { useContext } from 'react'
-import { UsuarioContext } from './UsuarioContext';
-import Auth from '../Authorization/Auth';
 import Dashboard from '../Dashboard/Dashboard';
+import PrivateRoute from '../Authorization/PrivateRoute';
+import { Route, Routes } from 'react-router-dom';
+import ProfileCard from '../Dashboard/ProfileCard';
+import Inicio from '../Dashboard/Inicio';
 
 function AppContent() {
-    const { usuario } = useContext(UsuarioContext);
 
     return (
-        <main className='h-screen w-auto flex justify-center flex-col items-center
-        bg-gradient-to-t from-gray-400 to-black box-border'>
-            {
-                usuario.username === "" || usuario.username === undefined || usuario.username === null ? (
-                    <div className='w-screen h-screen overflow-hidden flex justify-center flex-col items-center'>
-                        <Auth />
-                    </div>
-                ) : (
-                    <div className='h-full w-full'>
-                        <Dashboard />
-                    </div>
-                )
-            }
-        </main>
+        <>
+            <Routes>
+                <Route element={<PrivateRoute />}>
+                    <Route path='/*' element={<Dashboard />}>
+                        {/* <Route path='Inicio' element={<Inicio />} /> */}
+                        <Route path='perfil' element={<ProfileCard />} />
+                    </Route>
+                </Route>
+            </Routes>
+        </>
     )
 }
-
 export default AppContent;
