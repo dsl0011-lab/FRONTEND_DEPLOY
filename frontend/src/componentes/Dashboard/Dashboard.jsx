@@ -5,10 +5,12 @@ import nvImg from '../../assets/sideBarIcon.svg'
 import exit from '../../assets/exit.svg'
 import Sidebar from "./Sidebar"
 import Inicio from "./Inicio"
+import { Logout } from "../Authorization/scripts/Security"
 
 const Dashboard = () => {
     const { setUsuario } = useContext(UsuarioContext)
     const [showNB, setShowNB] = useState(false)
+
     return (
         <main className="flex h-full w-full min-h-screen bg-gray-50 dark:bg-gray-900">
             <div
@@ -27,7 +29,7 @@ const Dashboard = () => {
                     <h3 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">
                         Tablero
                     </h3>
-                    <button onClick={() => setUsuario(() => "")} className='bg-white w-12 h-12 hover:bg-gray-400 text-lg rounded-2xl p-2 ml-2 absolute top-0 right-0'>
+                    <button onClick={() => (Logout(), setUsuario(() => ""))} className='bg-white w-12 h-12 hover:bg-gray-400 text-lg rounded-2xl p-2 ml-2 absolute top-0 right-0'>
                         <img src={exit} className="w-fit h-fit" />
                     </button>
                 </article>

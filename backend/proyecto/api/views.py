@@ -1,18 +1,26 @@
 # backend/proyecto/api/views.py
 
+from rest_framework.response import Response
+# from urllib import response
 from rest_framework import viewsets, status, filters, permissions
 from rest_framework.decorators import action, api_view, permission_classes, authentication_classes
 from rest_framework.permissions import IsAuthenticated, AllowAny, BasePermission
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import TokenRefreshView
+from rest_framework_simplejwt.views import TokenVerifyView
+from rest_framework import status
+from django.conf import settings
 
 from .models import UsuarioPersonalizado
 from .serializers import (
     UsuarioPersonalizadoSerializer,
     RegistroSerializer,
 )
+from .authentication import CookieJWTAuthentication #middleware personalizado para leer token desde cookie httponly
 
 
 class IsAdminOrSelf(BasePermission):
@@ -40,6 +48,7 @@ class UsuarioPersonalizadoViewSet(viewsets.ModelViewSet):
         * POST /api/usuarios/set-password/
         * PATCH /api/usuarios/{id}/set-role/  (solo superuser)
     """
+    authentication_classes = [CookieJWTAuthentication]
     serializer_class = UsuarioPersonalizadoSerializer
     permission_classes = [IsAuthenticated, IsAdminOrSelf]
 
@@ -130,8 +139,16 @@ def register_user(request):
             httponly=True,
             secure=False,  # True en HTTPS
             samesite="Lax",
-            domain="localhost"
+            domain=None
         )
+        response.set_cookie(
+            key="refresh_token",
+            value=str(refresh),
+            httponly=True,
+            samesite="Lax",
+            secure=False,
+            domain=None
+            )
         return response
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -163,13 +180,12 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
-
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
         except Exception:
-            return Response({"detail": "Credenciales inválidas"}, status=401)
+            return Response({"respuesta": "Credenciales inválidas"}, status=401)
         access_token = serializer.validated_data.get("access") or super().get_serializer().get_token(serializer.user).access_token
         refresh_token = super().get_serializer().get_token(serializer.user)
         response = Response(serializer.validated_data, status=status.HTTP_200_OK)
@@ -178,7 +194,55 @@ class MyTokenObtainPairView(TokenObtainPairView):
             value=str(access_token),
             httponly=True,
             samesite="Lax",
-            secure=False,  # True si usas HTTPS
+            secure=False,
+            domain=None
+        )
+        response.set_cookie(
+            key="refresh_token",
+            value=str(refresh_token),
+            httponly=True,
+            samesite="Lax",
+            secure=False,
+            domain=None
         )
         return response
 
+
+@api_view(["POST"])
+@permission_classes([AllowAny]) 
+def logout(request):
+    response = Response({"respuesta": "Sesión cerrada"})
+    response.delete_cookie("jwt")
+    response.delete_cookie("refresh_token")
+    return response
+
+
+class CookieTokenRefreshView(TokenRefreshView):
+    def post(self, request, *args, **kwargs):
+        refresh_token = request.COOKIES.get("refresh_token")
+        if not refresh_token:
+            return Response({"respuesta": "No hay token de refresh token dentro de la cookie"}, status=status.HTTP_401_UNAUTHORIZED)
+        # Insertamos el token en el cuerpo para que el serializador de SimpleJWT lo entienda
+        request.data["refresh"] = refresh_token
+        response = super().post(request, *args, **kwargs)
+        if response.status_code == 200 and "access" in response.data:
+            # Guardar el nuevo access token en cookie HttpOnly
+            response.set_cookie(
+                key=settings.SIMPLE_JWT["AUTH_COOKIE"],  # normalmente "jwt"
+                value=response.data["access"],
+                httponly=True,
+                secure=settings.SIMPLE_JWT["AUTH_COOKIE_SECURE"],
+                samesite="Lax"
+            )
+            # opcional: eliminar del body los tokens
+            del response.data["access"]
+        return response
+
+
+class CookieTokenVerifyView(TokenVerifyView):
+    def post(self, request, *args, **kwargs):
+        access_token = request.COOKIES.get("jwt")
+        if not access_token:
+            return Response({"respuesta": "No hay token de acceso dentro de la cookie"}, status=status.HTTP_401_UNAUTHORIZED)
+        request.data["token"] = access_token
+        return super().post(request, *args, **kwargs)

@@ -10,8 +10,8 @@ function App() {
     <BrowserRouter>
       <UsuarioProvider>
         <Routes>
-            <Route path='/Auth' element={<Auth />} />
-            <Route  path="/*" element={<AppContent />}/>      
+          <Route path='/Auth' element={<Auth />} />
+          <Route  path="/*" element={<AppContent />}/>      
         </Routes>
       </UsuarioProvider>
     </BrowserRouter>

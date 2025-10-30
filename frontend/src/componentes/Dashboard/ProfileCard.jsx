@@ -1,33 +1,15 @@
 import { useContext, useEffect, useState } from "react"
 import { UsuarioContext } from "../useContext/UsuarioContext"
+import { secureFetch } from "../Authorization/scripts/Security";
+
 const ProfileCard = () => {
-    const { usuario, setUsuario } = useContext(UsuarioContext);
+    const { usuario } = useContext(UsuarioContext);
     const [editing, setEditing] = useState(false)
     const URL = "http://localhost:8000/api/usuarios/me/" //consultar perfil usuario actual
 
     useEffect(()=>{
-        const profileInformation = async () => {
-            try {
-                const respuesta = await fetch(URL, {
-                    method: "GET",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: 'include'
-                });
-                if (!respuesta.ok) {
-                    const respuestaFallida = await respuesta.json()
-                    console.error(respuestaFallida)
-                }
-                const data = await respuesta.json()
-                //datos recibidos
-                setUsuario(()=>data)
-            } catch (e) {
-                console.error("Ha ocurrido un error", e)
-            }
-        }
-        setTimeout(() => {
-            profileInformation()
-        }, 500);
-    },[setUsuario])
+        secureFetch({method: "POST"})
+    },[usuario])
 
     //componente para editar informacion del perfil
     const EditarProfile = () => {
@@ -60,12 +42,11 @@ const ProfileCard = () => {
                 !usuario ? <p>Cargando datos...</p>
                     :
                     <>
-                        <ul>
-                            <li>Nombre: {usuario.full_name}</li>
+                        <ul className="w-full h-full p-1 flex flex-col gap-2 m-2">
+                            <li>Nombre: {usuario.first_name} {usuario.last_name}</li>
                             <li>Nombre de usuario: {usuario.username}</li>
                             <li>Genero: {usuario.gender === "M" ? `masculino` : `femenino`}</li>
                             <li>Role: {usuario.role === "S" ? `Estudiante` : usuario.role === "T" ? "Profesor" : `Administrador`}</li>
-                            <li>Fecha de registro: {usuario.date_joined}</li>
                         </ul>
                         <button type="button" onClick={() => (setEditing(prev => !prev))} className="bg-blue-500 text-white px-4 py-2 rounded">
                             Editar información
