@@ -91,6 +91,40 @@ class UsuarioPersonalizadoViewSet(viewsets.ModelViewSet):
         user.save()
         return Response({"ok": True})
 
+    @action(detail=False, methods=["get"], url_path="mis-cursos")
+    def mis_cursos(self, request):
+        """
+        Devuelve los cursos en los que el usuario autenticado está matriculado,
+        incluyendo información básica del profesor que los imparte.
+        GET /api/usuarios/mis-cursos/
+        """
+        from cursos.models import Matricula
+
+        qs = (
+            Matricula.objects
+            .select_related('curso', 'curso__profesor')
+            .filter(alumno=request.user)
+        )
+
+        data = []
+        for m in qs:
+            prof = m.curso.profesor
+            full_name = f"{getattr(prof, 'first_name', '') or ''} {getattr(prof, 'last_name', '') or ''}".strip()
+            data.append({
+                "id": m.curso.id,
+                "nombre": m.curso.nombre,
+                "descripcion": m.curso.descripcion,
+                "profesor": {
+                    "id": prof.id,
+                    "username": getattr(prof, "username", ""),
+                    "first_name": getattr(prof, "first_name", "") or "",
+                    "last_name": getattr(prof, "last_name", "") or "",
+                    "full_name": full_name or getattr(prof, "username", ""),
+                }
+            })
+
+        return Response(data, status=200)
+
     # --- set-role: solo superusuario ---
     def get_permissions(self):
         if getattr(self, "action", None) == "set_role":
@@ -177,6 +211,42 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         data.pop("refresh", None)
         return data
 
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+@authentication_classes([CookieJWTAuthentication])
+def tareas_curso_para_alumno(request, curso_id: int):
+    """
+    Lista las tareas publicadas de un curso para un usuario autenticado.
+    Permite acceso si:
+      - es ADMIN/superuser, o
+      - es el profesor del curso, o
+      - está matriculado en el curso.
+    """
+    from django.shortcuts import get_object_or_404
+    from cursos.models import Curso, Matricula, Tarea
+    from cursos.serializers import TareaSerializer
+
+    curso = get_object_or_404(Curso, pk=curso_id)
+    user = request.user
+
+    # Admin o superuser
+    if user.is_superuser or getattr(user, "role", None) == UsuarioPersonalizado.Role.ADMIN:
+        allowed = True
+    # Profesor owner
+    elif getattr(user, "role", None) == UsuarioPersonalizado.Role.TEACHER and curso.profesor_id == user.id:
+        allowed = True
+    else:
+        # Alumno matriculado
+        allowed = Matricula.objects.filter(curso=curso, alumno=user).exists()
+
+    if not allowed:
+        return Response({"detail": "No autorizado"}, status=status.HTTP_403_FORBIDDEN)
+
+    # Para alumnos mostramos solo publicadas.
+    qs = Tarea.objects.filter(curso=curso, publicado=True).order_by("-creado_en")
+    data = TareaSerializer(qs, many=True).data
+    return Response(data, status=200)
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer

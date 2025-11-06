@@ -5,10 +5,10 @@ export default function CursosPage() {
   // const token = localStorage.getItem("token");
   const [cursos, setCursos] = useState([]);
   const [form, setForm] = useState({ nombre: "", descripcion: "" });
-  useEffect(() => { apiFetch("/api/profesor/cursos/", /*{ token }*/).then(setCursos); }, [/*token*/]);
+  useEffect(() => { apiFetch("/profesor/cursos/", /*{ token }*/).then(setCursos); }, [/*token*/]);
   const crear = async (e) => {
     e.preventDefault();
-    const nuevo = await apiFetch("/api/profesor/cursos/", { method:"POST", body:form,/* token */});
+    const nuevo = await apiFetch("/profesor/cursos/", { method:"POST", body:form,/* token */});
     setCursos([nuevo, ...cursos]); setForm({ nombre:"", descripcion:"" });
   };
   return (

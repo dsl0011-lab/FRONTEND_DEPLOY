@@ -7,6 +7,7 @@ import Dashboard from '../Dashboard/Dashboard';
 import PrivateRoute from '../Authorization/PrivateRoute';
 import ProfileCard from '../Dashboard/ProfileCard';
 import Asignaturas from '../Dashboard/Asignaturas';
+import AsignaturaDetalle from '../Dashboard/AsignaturaDetalle';
 
 // --- Profesor ---
 import RequireRole from '../Profesor/RequireRole';
@@ -27,6 +28,7 @@ function AppContent() {
           <Route path='/' element={<Dashboard />}>
             <Route path='perfil' element={<ProfileCard />} />
             <Route path='asignaturas' element={<Asignaturas />} />
+            <Route path='asignaturas/:id' element={<AsignaturaDetalle />} />
             <Route
               path="profesor"
               element={

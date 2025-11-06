@@ -30,3 +30,10 @@ class CalificacionSerializer(serializers.ModelSerializer):
         model = Calificacion
         fields = ['id','entrega','nota','feedback','calificada_en']
         read_only_fields = ['calificada_en']
+
+class AlumnoResumenSerializer(serializers.Serializer):
+    id = serializers.IntegerField()
+    username = serializers.CharField()
+    first_name = serializers.CharField(allow_blank=True)
+    last_name = serializers.CharField(allow_blank=True)
+    cursos = serializers.ListField(child=serializers.DictField(), default=list)
