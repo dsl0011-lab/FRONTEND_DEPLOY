@@ -8,7 +8,7 @@ export default function TareasPage() {
     <div>
       <h1 className="text-xl font-bold mb-3">Tareas (todas mis clases)</h1>
       <ul className="space-y-2">
-        {tareas.map(t => (<li key={t.id} className="border rounded p-2"><div className="font-semibold">{t.titulo}</div></li>))}
+        {tareas.map((t, index) => (<li key={index} className="border rounded p-2"><div className="font-semibold">{t.titulo}</div></li>))}
       </ul>
     </div>
   );
