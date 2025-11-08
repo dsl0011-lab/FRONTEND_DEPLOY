@@ -122,3 +122,5 @@ class UsuarioPersonalizadoSerializer(serializers.ModelSerializer):
         data = super().to_representation(instance)
         data["role_label"] = instance.get_role_display()  # "Administrador", "Profesor", "Alumno"
         return data
+
+

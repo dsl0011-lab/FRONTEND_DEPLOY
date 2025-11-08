@@ -19,7 +19,7 @@ const Login = ({ setFlipped, funcUsuario }) => {
     }, [])
 
     useEffect(() => {
-        if (form.email !== "" && form.password !== "") {
+        if (form.username !== "" && form.password !== "") {
             const sendForm = async () => {
                 try {
                     const datosEnviados = await fetch(URL, {
@@ -28,12 +28,12 @@ const Login = ({ setFlipped, funcUsuario }) => {
                         credentials: 'include',
                         body: JSON.stringify(form)
                     });
+                    const data = await datosEnviados.json().catch(() => null)
                     if (!datosEnviados.ok) {
-                        const respuestaFallida = await datosEnviados.json()
-                        console.error(respuestaFallida)
+                        console.error(data || { status: datosEnviados.status })
+                        return
                     }
-                    const data = await datosEnviados.json()
-                    funcUsuario(data)
+                    if (data) funcUsuario(data)
                 } catch (e) {
                     console.error("Ha ocurrido un error", e)
                 }

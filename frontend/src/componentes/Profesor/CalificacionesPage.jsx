@@ -4,10 +4,10 @@ export default function CalificacionesPage() {
   // const token = localStorage.getItem("token");
   const [entregas, setEntregas] = useState([]);
   const [notas, setNotas] = useState({});
-  useEffect(() => { apiFetch("/api/profesor/entregas/", /*{ token }*/).then(setEntregas); }, [/*token*/]);
+  useEffect(() => { apiFetch("/profesor/entregas/", /*{ token }*/).then(setEntregas); }, [/*token*/]);
   const calificar = async (entregaId) => {
     const body = { entrega: entregaId, nota: Number(notas[entregaId] || 0) };
-    const res = await apiFetch("/api/profesor/calificaciones/", { method:"POST", body, /*token */});
+    const res = await apiFetch("/profesor/calificaciones/", { method:"POST", body, /*token */});
     alert(`Calificada con nota ${res.nota}`);
   };
   return (

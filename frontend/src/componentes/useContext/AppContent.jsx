@@ -5,6 +5,9 @@ import { UsuarioContext } from './UsuarioContext';
 import Dashboard from '../Dashboard/Dashboard';
 import PrivateRoute from '../Authorization/PrivateRoute';
 import ProfileCard from '../Dashboard/ProfileCard';
+import Asignaturas from '../Dashboard/Asignaturas';
+import AsignaturaDetalle from '../Dashboard/AsignaturaDetalle';
+import Tutorias from '../Tutorias/Tutorias';
 
 // --- Profesor ---
 import RequireRole from '../Profesor/RequireRole';
@@ -22,16 +25,16 @@ import CursoDetallePageEstudiante from '../Estudiante/CursoDetallePageEstudiante
 import TareasEstudiante from '../Estudiante/TareasEstudiante';
 
 function AppContent() {
-
   const { usuario } = useContext(UsuarioContext)
-
   return (
     <>
       <Routes>
         <Route element={<PrivateRoute />}>
           <Route path='/' element={<Dashboard />}>
             <Route path='perfil' element={<ProfileCard />} />
-            {/* ruta para mostra el componente profesor */}
+            <Route path='asignaturas' element={<Asignaturas />} />
+            <Route path='asignaturas/:id' element={<AsignaturaDetalle />} />
+            <Route path='tutorias' element={<Tutorias />} />
             <Route
               path="profesor"
               element={

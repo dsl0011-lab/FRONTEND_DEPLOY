@@ -13,6 +13,7 @@ const Sidebar = () => {
       <nav className="w-auto h-full flex flex-col gap-4 bg-gray-700 p-4">
         <Link to='/' className="hover:text-gray-400">Inicio</Link>
         <Link to='/perfil' className="hover:text-gray-400">Perfil</Link>
+        <Link to='/tutorias' className="hover:text-gray-400">Tutorias</Link>
         {/* muestra el componente con al rutina dependiendo el role del usuario*/}
       {
         (usuario?.role === "T" ? <Link to='/profesor' className="hover:text-gray-400">Panel Profesor</Link> : (

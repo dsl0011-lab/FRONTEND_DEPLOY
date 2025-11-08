@@ -8,7 +8,7 @@ function CursoDetallePageEstudiante() {
     const [asignatura, setAsignatura] = useState(null)
 
     useEffect(() => {
-        apiFetch(`/api/estudiante/cursos/${id}/`).then(setAsignatura);
+        apiFetch(`/estudiante/cursos/${id}/`).then(setAsignatura);
         // apiFetch(`/api/profesor/tareas/`).then(ts => setTareas(ts.filter(t => String(t.curso) === String(id))));
     }, [id]);
 

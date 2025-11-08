@@ -4,12 +4,12 @@ import { apiFetch } from '../Profesor/api';
 
 const TareasEstudiante = () => {
 const [tareas, setTareas] = useState([]);
-    useEffect(() => { apiFetch("/api/estudiante/tareas/").then(setTareas) }, []);
+    useEffect(() => { apiFetch("/estudiante/tareas/").then(setTareas) }, []);
     return (
         <div className='w-full h-full'>
             <h3 className="text-xl font-bold mb-3">Tareas (todas mis clases)</h3>
             <ul className="w-full h-full p-2">
-                {tareas.map((t, index) => (<li key={index} className="border rounded p-2 flex flex-row w-full mt-4">
+                {tareas.map(t => (<li key={t.id} className="border rounded p-2 flex flex-row w-full mt-4">
                     <div className="font-semibold w-2/4">
                         <p>Titulo: {t.titulo}</p>
                         <p>Descripción: {t.descripcion}</p>

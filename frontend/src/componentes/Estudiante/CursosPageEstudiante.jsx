@@ -9,7 +9,7 @@ const CursosPageStudent = () => {
   const navigate = useNavigate()
 
   useEffect(()=>{
-    apiFetch(`/api/estudiante/cursos/`).then(setCursos);
+    apiFetch(`/estudiante/cursos/`).then(setCursos);
   }, [])
 
   const verCurso = (id) =>{
