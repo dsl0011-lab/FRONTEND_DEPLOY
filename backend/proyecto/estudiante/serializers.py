@@ -9,7 +9,7 @@ class EstudianteEntregaSerializer(serializers.ModelSerializer):
         model = Entrega
         fields = '__all__'
 
-    
+
 class EstudianteTareaSerializer(serializers.ModelSerializer):
     curso = serializers.CharField(source='curso.nombre')
     entregas = EstudianteEntregaSerializer(many=True, read_only=True)
