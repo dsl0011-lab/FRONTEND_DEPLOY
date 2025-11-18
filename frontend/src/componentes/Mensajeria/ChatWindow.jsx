@@ -24,7 +24,7 @@ export default function ChatWindow({ conversacion, mensajes, onEnviar, onUpdateA
       await onUpdateAsunto(asunto)
       setEditing(false)
     } catch (e) {
-      setErr('No se pudo actualizar el asunto')
+      setErr('No se pudo actualizar el asunto', e)
     } finally { setSaving(false) }
   }
 

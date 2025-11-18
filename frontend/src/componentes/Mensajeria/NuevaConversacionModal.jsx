@@ -15,7 +15,7 @@ export default function NuevaConversacionModal({ open, onClose, onCreate }) {
       await onCreate({ asunto: asunto.trim(), usernames: [username.trim()] })
       setUsername(""); setAsunto("")
     } catch (e) {
-      setErr('No se pudo crear la conversación. ¿Existe ese usuario?')
+      setErr('No se pudo crear la conversación. ¿Existe ese usuario?', e)
     }
   }
 

@@ -56,7 +56,8 @@ export default function TareasPage() {
       if (fechaEntrega) {
         try {
           payload.fecha_entrega = new Date(fechaEntrega).toISOString();
-        } catch (_) {
+        } catch (e) {
+          console.error(e)
           // si no se puede parsear dejamos el campo fuera
         }
       }

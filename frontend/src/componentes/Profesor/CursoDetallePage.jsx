@@ -47,7 +47,8 @@ export default function CursoDetallePage() {
     if (fechaEntrega) {
       try {
         payload.fecha_entrega = new Date(fechaEntrega).toISOString()
-      } catch (_) {
+      } catch (e) {
+        console.error(e)
         /* noop */
       }
     }
