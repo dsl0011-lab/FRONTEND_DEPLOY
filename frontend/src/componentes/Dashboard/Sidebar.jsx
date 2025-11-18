@@ -27,14 +27,21 @@ const Sidebar = () => {
           <img src={perfil} className="mdh:w-6/12 mdh:h-6/12 w-[45px] h-[45px]" />
           <p className="w-12/12 h-6/12 mdh:w-fit mdh:h-fit">Perfil</p>
         </button>
+        <button onClick={()=>ir('/mensajes')} className="flex-1 bg-slate-900 flex items-center justify-center flex-col p-1 gap-1 hover:bg-sky-950 rounded-2xl">
+          <img src={tutoria} className="mdh:w-6/12 mdh:h-6/12 w-[45px] h-[45px]" />
+          <p className="w-12/12 h-6/12 mdh:w-fit mdh:h-fit">Mensajes</p>
+        </button>
         <button onClick={()=>ir('/tutorias')}className="flex-1 bg-slate-900 flex items-center justify-center flex-col p-1 gap-1 hover:bg-sky-950 rounded-2xl">
           <img src={tutoria} className="mdh:w-6/12 mdh:h-6/12 w-[45px] h-[45px]" />
           <p className="w-12/12 h-6/12 mdh:w-fit mdh:h-fit">Tutorias</p>
         </button>
+<<<<<<< HEAD
         <button onClick={()=>ir('/mensajes')}className="flex-1 bg-slate-900 flex items-center justify-center flex-col p-1 gap-1 hover:bg-sky-950 rounded-2xl">
           <img src={remplazo} className="mdh:w-6/12 mdh:h-6/12 w-[45px] h-[45px]" />
           <p className="w-12/12 h-6/12 mdh:w-fit mdh:h-fit">Mensajería</p>
         </button>
+=======
+>>>>>>> main
         {/* muestra el componente con al rutina dependiendo el role del usuario*/}
       {
         (usuario?.role === "T" ? 
