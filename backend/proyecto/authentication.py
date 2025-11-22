@@ -11,6 +11,6 @@ class CookieJWTAuthentication(JWTAuthentication):
             validated_token = self.get_validated_token(access_token)
             return self.get_user(validated_token), validated_token
         except TokenError:
-            print("No se encontró token de acceso en las cookies")
+            print("No se encontró un token valido")
             # No devuelvas 401 aquí, simplemente no autentica
             return None

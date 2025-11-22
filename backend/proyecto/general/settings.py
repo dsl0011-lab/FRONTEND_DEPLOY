@@ -128,9 +128,10 @@ SIMPLE_JWT = {
     "AUTH_COOKIE_SECURE": False,   # True si usas HTTPS
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
+
+AUTH_USER_MODEL = "api.UsuarioPersonalizado"
 
 AUTH_PASSWORD_VALIDATORS = [
     {

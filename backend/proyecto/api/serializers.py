@@ -26,23 +26,6 @@ class RegistroSerializer(serializers.ModelSerializer):
         return user
 
 
-class LoginSerializer(serializers.Serializer):
-    username = serializers.CharField()
-    password = serializers.CharField(write_only=True)
-
-    def validate(self, attrs):
-        user = authenticate(username=attrs.get("username"), password=attrs.get("password"))
-        if not user:
-            raise serializers.ValidationError("Credenciales inválidas.")
-        attrs["user"] = user
-        return attrs
-
-class UserPublicSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UsuarioPersonalizado
-        fields = ["id", "username", "first_name", "last_name", "gender", "role"]
-
-
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
