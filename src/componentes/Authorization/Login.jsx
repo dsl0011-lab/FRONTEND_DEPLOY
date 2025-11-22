@@ -22,7 +22,9 @@ const Login = ({ setFlipped, funcUsuario }) => {
     const recordarDatos = () => {
         if (datosRecordados === null) {
             setDatosRecordados(true)
-        } else {
+        }else if(recordarDatos === false){
+            document.cookie = `recordarDatos=;max-age=0;path=/;domain=${window.location.hostname}`;
+        }else {
             setDatosRecordados(prev => !prev)
         }
     }
