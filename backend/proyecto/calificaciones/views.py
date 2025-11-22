@@ -16,7 +16,9 @@ class CalificacionViewSet(viewsets.ModelViewSet):
     
     def get_queryset(self):
         user = self.request.user
+        
         queryset = NotaAcademica.objects.select_related('estudiante', 'curso', 'profesor')
+        print(queryset)
         
         if hasattr(user, 'estudiante'):
             queryset = queryset.filter(estudiante=user, visible_estudiante=True)

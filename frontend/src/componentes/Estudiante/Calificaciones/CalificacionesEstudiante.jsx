@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from "axios";
 
 const CalificacionesEstudiante = () => {
   const [calificaciones, setCalificaciones] = useState([]);
@@ -12,19 +12,26 @@ const CalificacionesEstudiante = () => {
     cargarDatos();
   }, []);
 
+  useEffect(() => {
+    console.log('Calificaciones:', calificaciones);
+    console.log('Estadísticas:', estadisticas);
+  }, [calificaciones, estadisticas]);
+
+
   const cargarDatos = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem('access_token');
+      // const token = localStorage.getItem('access_token');
       
-      if (!token) {
-        console.error('No hay token');
-        setLoading(false);
-        return;
-      }
+      // if (!token) {
+      //   console.error('No hay token');
+      //   setLoading(false);
+      //   return;
+      // }
 
       const config = {
-        headers: { Authorization: `Bearer ${token}` }
+        // headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
       };
 
       const respCalif = await axios.get(

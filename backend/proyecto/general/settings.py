@@ -177,3 +177,5 @@ CORS_ALLOW_CREDENTIALS = True
 
 # --- Otros ---
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# APPEND_SLASH = True
