@@ -7,7 +7,7 @@ const Logout = () => {
     let cookie = document.cookie
     cookie = cookie.split(";").flat().find(item => item.startsWith(" recordarDatos"))
     if(!cookie){
-        fetch(`${API_BASE}/auth/token/api/auth/logout`, {
+        fetch(`https://api-deploy-wyep.onrender.com/api/auth/logout`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             credentials: "include",
