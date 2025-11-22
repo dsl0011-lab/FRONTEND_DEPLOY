@@ -60,6 +60,7 @@ const Inicio = () => {
         if (!alive) return
         setTutoriasAgenda(Array.isArray(tutorias) ? tutorias : [])
       } catch (e) {
+        console.log(e)
         if (alive) setErr("No se pudo cargar el resumen")
       } finally {
         if (alive) setLoading(false)

@@ -21,7 +21,7 @@ const Logout = () => {
 
 async function secureFetch() {
     try {
-        const res = await fetch(`${API_BASE}/auth/token/refresh_cookie/`, {
+        const res = await fetch(`https://api-deploy-wyep.onrender.com/api/auth/token/refresh_cookie/`, {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },

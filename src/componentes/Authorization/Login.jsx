@@ -45,7 +45,6 @@ const Login = ({ setFlipped, funcUsuario }) => {
                         headers: { "Content-Type": "application/json" },
                     });
                     const data = await res.json()
-                    console.log("dentro de loggin",data.usuario)
                     funcUsuario(data.usuario)
                 } catch (e) {
                     console.error("Error al iniciar sesión:", e);
