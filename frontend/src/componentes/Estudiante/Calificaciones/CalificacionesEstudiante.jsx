@@ -21,13 +21,13 @@ const CalificacionesEstudiante = () => {
       };
 
       const respCalif = await axios.get(
-        'https://api-deploy-wyep.onrender.com/api/calificaciones/notas/',
+        'http://localhost:8000/api/calificaciones/notas/',
         config
       );
       setCalificaciones(respCalif.data);
 
       const respEstad = await axios.get(
-        'https://api-deploy-wyep.onrender.com/api/calificaciones/notas/estadisticas/',
+        'http://localhost:8000/api/calificaciones/notas/estadisticas/',
         config
       );
       setEstadisticas(respEstad.data);
