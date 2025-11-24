@@ -5,6 +5,8 @@ import ChatWindow from './ChatWindow'
 import NuevaConversacionModal from './NuevaConversacionModal'
 import UserDirectory from './UserDirectory'
 import { UsuarioContext } from '../useContext/UsuarioContext'
+import ComponenteLoading from '../PantallaLoading/ComponenteLoading'
+import { LoadingContext } from '../useContext/LoadingContext';
 
 export default function MensajeriaPage() {
   const { usuario } = useContext(UsuarioContext)
@@ -14,8 +16,13 @@ export default function MensajeriaPage() {
   const [err, setErr] = React.useState("")
   const [open, setOpen] = React.useState(false)
   const puedeBorrar = usuario?.role === 'T' || usuario?.role === 'A'
+  const { Loading, setLoading } = useContext(LoadingContext)
 
-  React.useEffect(() => { listarConversaciones().then(setConvs).catch(()=>setErr('No se pudieron cargar las conversaciones')) }, [])
+  React.useEffect(() => { 
+    setLoading(true)
+    listarConversaciones().then(setConvs).catch(()=>setErr('No se pudieron cargar las conversaciones')) 
+    setLoading(false)
+  }, [setLoading])
 
   React.useEffect(() => {
     let alive = true

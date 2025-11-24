@@ -1,6 +1,7 @@
 import React from 'react'
 import { getDirectorio } from './api'
 
+
 function UserGroup({ title, users, onStart }) {
   if (!users || users.length === 0) return null
   return (
@@ -27,6 +28,7 @@ function UserGroup({ title, users, onStart }) {
 export default function UserDirectory({ onStart }) {
   const [dir, setDir] = React.useState({ A: [], T: [], S: [] })
   const [err, setErr] = React.useState("")
+
 
   React.useEffect(() => {
     getDirectorio().then(setDir).catch(() => setErr('No se pudo cargar el directorio'))

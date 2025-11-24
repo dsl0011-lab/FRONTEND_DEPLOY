@@ -3,6 +3,7 @@ import { UsuarioContext } from "../useContext/UsuarioContext"
 import { Link } from "react-router-dom"
 import { apiFetch, getTutorias } from "../Profesor/api"
 import CalendarioTareas from "./CalendarioTareas"
+import ComponenteLoading from '../PantallaLoading/ComponenteLoading'
 
 const Inicio = () => {
   const { usuario } = useContext(UsuarioContext)
@@ -19,11 +20,12 @@ const Inicio = () => {
   const [misTareas, setMisTareas] = useState([])
   const [tutoriasAgenda, setTutoriasAgenda] = useState([])
 
+
   useEffect(() => {
+    setLoading(true)
     let alive = true
     async function load() {
       setErr("")
-      setLoading(true)
       try {
         if (usuario?.role === "S") {
           const cs = await apiFetch("/usuarios/mis-cursos/")
@@ -46,30 +48,30 @@ const Inicio = () => {
           const listCursos = Array.isArray(cs)
             ? cs
             : Array.isArray(cs?.results)
-            ? cs.results
-            : []
+              ? cs.results
+              : []
           const listTareas = Array.isArray(ts)
             ? ts
             : Array.isArray(ts?.results)
-            ? ts.results
-            : []
+              ? ts.results
+              : []
           setMisCursosImpartidos(listCursos)
           setMisTareas(listTareas)
         }
         const tutorias = await getTutorias().catch(() => [])
         if (!alive) return
         setTutoriasAgenda(Array.isArray(tutorias) ? tutorias : [])
-      } catch{
+      } catch {
         if (alive) setErr("No se pudo cargar el resumen")
-      } finally {
-        if (alive) setLoading(false)
       }
     }
     load()
+    setLoading(false)
     return () => {
       alive = false
     }
   }, [usuario?.role])
+
 
   const bienvenida = useMemo(() => {
     const nombre = `${usuario.first_name || ""} ${usuario.last_name || ""}`.trim() || usuario.username
@@ -97,7 +99,7 @@ const Inicio = () => {
 
       {err && <div className="text-sm text-red-400 mb-3">{err}</div>}
 
-      {loading && <div className="text-gray-300">Cargando...</div>}
+      {loading && <div className="text-gray-300">{<ComponenteLoading />}</div>}
 
       {/* Resumen para Alumno */}
       {usuario?.role === "S" && !loading && (

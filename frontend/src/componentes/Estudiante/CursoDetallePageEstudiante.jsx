@@ -1,23 +1,28 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { useParams } from "react-router-dom";
 import { apiFetch } from '../Profesor/api';
 import { imagenesRandom } from './scripts/fotos'
 import { convertirFecha } from './scripts/conversionFecha'
+import ComponenteLoading from '../PantallaLoading/ComponenteLoading'
+import { LoadingContext } from '../useContext/LoadingContext';
 
 function CursoDetallePageEstudiante() {
     const { id } = useParams();
     const [ asignatura, setAsignatura ] = useState(null)
     const [ tareas, setTareas ] = useState([])
+    const { Loading, setLoading } = useContext(LoadingContext)
 
     useEffect(()=>{
         asignatura !== null && setTareas(asignatura?.tareas)
     },[asignatura])
 
     useEffect(() => {
+        setLoading(true)
         apiFetch(`/estudiante/cursos/${id}/`).then(setAsignatura);
-    }, [id]);
+        setLoading(false)
+    }, [id, setLoading]);
 
-    if (asignatura === null) return <p>cargando datos...</p>
+    if (asignatura === null && Loading) return <p>{<ComponenteLoading />}</p>
 
     return (
         <section className='flex flex-col gap-6 w-full h-full'>{

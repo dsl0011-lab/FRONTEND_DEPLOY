@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useParams, Link } from 'react-router-dom'
 import { apiFetch } from '../Profesor/api'
+import ComponenteLoading from '../PantallaLoading/ComponenteLoading'
 
 export default function AsignaturaDetalle() {
   const { id } = useParams()
@@ -12,21 +13,20 @@ export default function AsignaturaDetalle() {
   const [error, setError] = useState("")
 
   useEffect(() => {
+    setLoading(true)
     let cancelled = false
     const load = async () => {
       try {
-        setLoading(true)
         setError("")
         const data = await apiFetch(`/alumno/cursos/${id}/tareas/`)
         if (!cancelled) setTareas(Array.isArray(data) ? data : [])
       } catch (e) {
         if (!cancelled) setError("No se pudieron cargar las tareas")
         console.error(e)
-      } finally {
-        if (!cancelled) setLoading(false)
-      }
+      } 
     }
     load()
+    setLoading(false)
     return () => { cancelled = true }
   }, [id])
 
@@ -45,7 +45,7 @@ export default function AsignaturaDetalle() {
         </p>
       )}
 
-      {loading && <div className="text-gray-700 dark:text-gray-300">Cargando…</div>}
+      {loading && <div className="text-gray-700 dark:text-gray-300">{<ComponenteLoading />}</div>}
       {error && <div className="text-red-600 dark:text-red-400">{error}</div>}
 
       {!loading && !error && (

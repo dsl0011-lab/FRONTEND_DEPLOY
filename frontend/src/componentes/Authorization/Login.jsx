@@ -9,6 +9,7 @@ const Login = ({ setFlipped, funcUsuario }) => {
     const URL = "http://localhost:8000/api/auth/token/"
     const { setLoading } = useContext(LoadingContext)
     const [error, setError] = useState(false)
+    const [ errorDescripcion, setErrorDescripcion ] = useState("")
     const [help, setHelp] = useState(false)
     const [form, setForm] = useState({
         username: "",
@@ -20,6 +21,7 @@ const Login = ({ setFlipped, funcUsuario }) => {
 
 
 useEffect(() => {
+    setLoading(true)
     if(usuarioRecordado){
         const usuario = localStorage.getItem("usuarioGuardado")
         const usuarioObj = JSON.parse(usuario) 
@@ -41,7 +43,8 @@ useEffect(() => {
         }
         inicioAutomatico()
     }
-}, [funcUsuario, usuarioRecordado, usuario])
+    setLoading(false)
+}, [funcUsuario, usuarioRecordado, usuario, setLoading])
 
 
     const saveForm = useCallback((e) => {
@@ -72,11 +75,11 @@ useEffect(() => {
                         credentials: 'include',
                         body: JSON.stringify(form)
                     });
-                    setLoading(true)
                     const data = await datosEnviados.json().catch(() => null)
                     if (!datosEnviados.ok) return setError(true)
                     if (data) return funcUsuario(data)
-                } catch {
+                } catch(e) {
+                    setErrorDescripcion(e)
                     setError(true)
                 } finally {
                     setLoading(false)
@@ -87,6 +90,8 @@ useEffect(() => {
     }, [form, funcUsuario, setLoading])
 
 
+    useEffect(()=>console.log(errorDescripcion),[errorDescripcion])
+
     const btnRecuerdame = () =>{
         setDatosRecordados(prev =>!prev)
     }
@@ -95,8 +100,8 @@ useEffect(() => {
         <>
             <div className="w-full h-full relative" onClick={()=>setError(false)}>
                 <h1 className="text-2xl font-bold w-full h-fit leading-tight tracking-tight dark:text-white p-2">Inicio de Sesión</h1>
-                {error !== false && <p className="absolute p-2 rounded-lg bg-red-800 top-10 m-2 text-white pl-2 pr-2">Ha ocurrido un error, vuelve a intentarlo más tarde.</p>}
-                <form onSubmit={(e) => saveForm(e)} className="w-full h-full flex flex-col items-center justify-center p-2 gap-4 text-sm sm:text-base">
+                {error !== false && <p className="absolute p-2 rounded-lg bg-red-800 top-10 m-2 text-white pl-2 pr-2">{errorDescripcion !== "" ? errorDescripcion : `Ha ocurrido un error, vuelve a intentarlo más tarde.`}</p>}
+                <form onSubmit={(e) => {setLoading(true), saveForm(e)}} className="w-full h-full flex flex-col items-center justify-center p-2 gap-4 text-sm sm:text-base">
                     <input type="text" name="usernameR" id="usernameR" placeholder="Ingresa nick/username" className="flex-1 max-h-12 text-white bg-gray-50 border border-gray-300 rounded-2xl w-full max-w-60 sm:max-w-96 h-auto p-1.5 sm:p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400" required />
                     <input type="password" name="passwordL" id="passwordL" placeholder="Ingresa tu contraseña" autoComplete="off" className="flex-1 max-h-12 text-white bg-gray-50 border border-gray-300 rounded-2xl w-full max-w-60 sm:max-w-96 h-auto p-1.5 sm:p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                     onMouseOver={() => setHelp(true)} onMouseOut={() => setHelp(false)} pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[^\w\s]).+$" minLength={8} maxLength={30} required />

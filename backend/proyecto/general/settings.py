@@ -85,6 +85,10 @@ DATABASES = {
 # --- Usuario personalizado ---
 AUTH_USER_MODEL = "api.UsuarioPersonalizado"
 
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
 # --- JWT ---
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (

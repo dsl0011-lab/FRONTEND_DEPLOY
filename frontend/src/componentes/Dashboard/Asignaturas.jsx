@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { apiFetch } from '../Profesor/api'
+import ComponenteLoading from '../PantallaLoading/ComponenteLoading'
 
 function Asignaturas() {
   const [cursos, setCursos] = useState([])
@@ -18,11 +19,10 @@ function Asignaturas() {
       } catch (e) {
         if (!cancelled) setError("No se pudieron cargar las asignaturas")
         console.error(e)
-      } finally {
-        if (!cancelled) setLoading(false)
       }
     }
     load()
+    setLoading(false)
     return () => { cancelled = true }
   }, [])
 
@@ -33,7 +33,7 @@ function Asignaturas() {
       </h2>
 
       {loading && (
-        <div className="text-gray-700 dark:text-gray-300">Cargando…</div>
+        <div className="text-gray-700 dark:text-gray-300">{<ComponenteLoading />}</div>
       )}
 
       {error && (
