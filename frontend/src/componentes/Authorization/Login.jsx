@@ -9,11 +9,6 @@ const Login = ({ setFlipped, funcUsuario, setError, error }) => {
     //cambiar URL del endpoint en cuestion
     const URL = `${API_BASE}api/auth/token/`
     const { setLoading } = useContext(LoadingContext)
-<<<<<<< HEAD
-    const [error, setError] = useState(false)
-=======
-
->>>>>>> desarrollo-daniel-sandoval
     const [ errorDescripcion, setErrorDescripcion ] = useState("")
     const [help, setHelp] = useState(false)
     const [form, setForm] = useState({
@@ -49,12 +44,7 @@ useEffect(() => {
         }
         inicioAutomatico()
     }
-<<<<<<< HEAD
-    setLoading(false)
-}, [funcUsuario, usuarioRecordado, usuario, setLoading])
-=======
 }, [funcUsuario, usuarioRecordado, usuario, setLoading, URL])
->>>>>>> desarrollo-daniel-sandoval
 
 
     const saveForm = useCallback((e) => {
@@ -85,19 +75,11 @@ useEffect(() => {
                         credentials: 'include',
                         body: JSON.stringify(form)
                     });
-<<<<<<< HEAD
-                    const data = await datosEnviados.json().catch(() => null)
-                    if (!datosEnviados.ok) return setError(true)
-                    if (data) return funcUsuario(data)
-                } catch(e) {
-                    setErrorDescripcion(e)
-=======
                     const data = await datosEnviados.json().catch((e) => {setErrorDescripcion(e.message), setError(true)})
                     if (!datosEnviados.ok) return setError(true)
                     if (data) return funcUsuario(data)
                 } catch(e) {
                     setErrorDescripcion(e.message)
->>>>>>> desarrollo-daniel-sandoval
                     setError(true)
                 }
             }
