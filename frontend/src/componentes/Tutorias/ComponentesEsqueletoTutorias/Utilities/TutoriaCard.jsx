@@ -79,30 +79,30 @@ export default function TutoriaCard({ tutoria, setRefrescarTutorias }) {
       <p className="text-sm text-gray-300">Alumno: {alumno}</p>
       <p className="text-sm text-gray-400">{formatFecha(tutoria.fecha)}</p>
       {/* aceptar o cancelar una tutoria */}
-      {tutoria.estado === "pendiente" && usuario?.role === "T"  &&
+      {(tutoria.estado === "pendiente" && (usuario?.role === "T" || usuario?.role === "S")) &&
       <div className="w-full h-fit p-2 flex justify-evenly items-end">
         <button className="bg-green-800 w-fit min-w-24 h-fit p-1 rounded-xl" onClick={()=>funtEstado("confirmada", tutoria.id)}>Aceptar</button>
-        <button className="bg-red-800 w-fit min-w-24 h-fit p-1 rounded-xl" onClick={()=>funtEstado("cancelada", tutoria.id)}>Cancelar</button>
+        <button className="bg-yellow-800 w-fit min-w-24 h-fit p-1 rounded-xl" onClick={()=>funtEstado("cancelada", tutoria.id)}>Cancelar</button>
       </div>}
       {/* cancelar tutorias previamente confirmadas */}
-      {tutoria.estado === "confirmada" && usuario?.role === "T" &&
-      <div className="w-full h-fit p-2 flex items-end justify-end gap-2">
+      {(tutoria.estado === "confirmada" && (usuario?.role === "T" || usuario?.role === "S")) &&
+      <div className="w-full h-fit p-2 flex justify-evenly items-end">
         <button
-          className="bg-red-800 w-fit min-w-24 h-fit p-1 rounded-xl"
+          className="bg-yellow-800 w-fit min-w-24 h-fit p-1 rounded-xl"
           onClick={()=>funtEstado("cancelada", tutoria.id)}
         >
           Cancelar
         </button>
         <button
-          className="bg-red-900 w-fit min-w-24 h-fit p-1 rounded-xl"
+          className="bg-red-800 w-fit min-w-24 h-fit p-1 rounded-xl"
           onClick={()=>funcEliminar(tutoria.id)}
         >
           Eliminar
         </button>
       </div>}
       {/* eliminar la tutoria (solo si esta cancelada) */}
-      {tutoria.estado === "cancelada" &&
-      <div className="w-full h-fit p-2 flex items-end justify-end">
+      {(tutoria.estado === "cancelada") &&
+      <div className="w-full h-fit p-2 flex items-center justify-center">
         <button className="bg-red-800 w-fit min-w-24 h-fit p-1 rounded-xl" onClick={()=>funcEliminar(tutoria.id)} >Eliminar</button>
       </div>}
       {tutoria.notas && <p className="text-xs text-gray-400 border-t border-gray-700 pt-2">{tutoria.notas}</p>}

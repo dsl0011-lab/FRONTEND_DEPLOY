@@ -78,7 +78,7 @@ function CursoDetallePageEstudiante() {
                     "No hay descripción relevante para esta tarea"}
                 </p>
                 <div className="flex flex-row justify-between w-full h-fit">
-                  <span className="p-2 bg-sky-950 border-2 border-sky-500 rounded-2xl text-xs md:text-sm">
+                  <span className="p-2 text-center min-w-28 w-fit h-fit bg-sky-950 border-2 border-sky-500 rounded-2xl text-xs md:text-sm">
                     Ver
                   </span>
                   <p className="border-dashed border-2 border-sky-950 rounded-2xl p-2 text-xs md:text-sm">
