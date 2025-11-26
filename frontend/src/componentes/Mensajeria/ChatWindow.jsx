@@ -41,6 +41,7 @@ export default function ChatWindow({ conversacion, mensajes, onEnviar, onUpdateA
     </section>
   )
 
+
   return (
     <section className="flex-1 p-4 flex flex-col">
       <div className="text-lg font-semibold mb-2 flex items-center justify-between gap-2">

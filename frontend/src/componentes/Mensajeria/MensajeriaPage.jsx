@@ -1,11 +1,11 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { listarConversaciones, crearConversacion, getMensajes, enviarMensaje, marcarLeidos, actualizarConversacion, eliminarConversacion } from './api'
 import ConversacionesList from './ConversacionesList'
 import ChatWindow from './ChatWindow'
 import NuevaConversacionModal from './NuevaConversacionModal'
 import UserDirectory from './UserDirectory'
 import { UsuarioContext } from '../useContext/UsuarioContext'
-import { LoadingContext } from '../useContext/LoadingContext';
+import { MiniComponenteLoading } from '../PantallaLoading/ComponenteLoading'
 
 export default function MensajeriaPage() {
   const { usuario } = useContext(UsuarioContext)
@@ -15,13 +15,12 @@ export default function MensajeriaPage() {
   const [err, setErr] = React.useState("")
   const [open, setOpen] = React.useState(false)
   const puedeBorrar = usuario?.role === 'T' || usuario?.role === 'A'
-  const { Loading, setLoading } = useContext(LoadingContext)
+  const [ requestFinalizada, setRequestFinalizada ] = useState(false)
 
   React.useEffect(() => { 
-    setLoading(true)
-    listarConversaciones().then(setConvs).catch(()=>setErr('No se pudieron cargar las conversaciones')) 
-    setLoading(false)
-  }, [setLoading])
+      listarConversaciones().then(setConvs).catch(()=>setErr('No se pudieron cargar las conversaciones')) 
+      setRequestFinalizada(true)
+  }, [])
 
   React.useEffect(() => {
     let alive = true
@@ -31,8 +30,8 @@ export default function MensajeriaPage() {
       try {
         await marcarLeidos(sel.id)
         setConvs(prev => prev.map(x => x.id === sel.id ? { ...x, no_leidos: 0 } : x))
-      } catch(e) {setErr(e)}
-    }).catch(()=>{})
+      } catch(e) {setErr(e), setRequestFinalizada(true)}
+    }).catch(()=>{setRequestFinalizada(true)})
     return ()=> { alive = false }
   }, [sel?.id])
 
@@ -87,6 +86,8 @@ export default function MensajeriaPage() {
       setErr('No se pudo iniciar la conversación')
     }
   }
+
+  if(!requestFinalizada) return(<><MiniComponenteLoading /></>)
 
   return (
     <div className="min-h-[70vh] flex text-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">

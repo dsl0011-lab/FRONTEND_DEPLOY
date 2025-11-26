@@ -28,11 +28,11 @@ function UserGroup({ title, users, onStart }) {
 export default function UserDirectory({ onStart }) {
   const [dir, setDir] = React.useState({ A: [], T: [], S: [] })
   const [err, setErr] = React.useState("")
-
-
+  
   React.useEffect(() => {
-    getDirectorio().then(setDir).catch(() => setErr('No se pudo cargar el directorio'))
+    getDirectorio().then(setDir).catch(() => {setErr('No se pudo cargar el directorio')})
   }, [])
+
 
   return (
     <aside className="w-80 border-l border-gray-700 p-3 space-y-2">

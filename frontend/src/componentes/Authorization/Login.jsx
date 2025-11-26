@@ -9,7 +9,6 @@ const Login = ({ setFlipped, funcUsuario, setError, error }) => {
     //cambiar URL del endpoint en cuestion
     const URL = `${API_BASE}api/auth/token/`
     const { setLoading } = useContext(LoadingContext)
-
     const [ errorDescripcion, setErrorDescripcion ] = useState("")
     const [help, setHelp] = useState(false)
     const [form, setForm] = useState({
@@ -22,6 +21,7 @@ const Login = ({ setFlipped, funcUsuario, setError, error }) => {
 
 
 useEffect(() => {
+    setLoading(true)
     if(usuarioRecordado){
         const usuario = localStorage.getItem("usuarioGuardado")
         const usuarioObj = JSON.parse(usuario) 
@@ -38,11 +38,13 @@ useEffect(() => {
                 funcUsuario(data)
             } catch (e) {
                 console.error("Error al iniciar sesión:", e);
-                
+                setLoading(false)
                 return false;
+            }finally{
+                setLoading(false)
             }
         }
-        inicioAutomatico()
+    inicioAutomatico()
     }
 }, [funcUsuario, usuarioRecordado, usuario, setLoading, URL])
 
@@ -88,6 +90,8 @@ useEffect(() => {
         setLoading(false)
     }, [form, funcUsuario, setLoading, URL, setError])
 
+
+    useEffect(()=>console.log(errorDescripcion),[errorDescripcion])
 
     const btnRecuerdame = () =>{
         setDatosRecordados(prev =>!prev)

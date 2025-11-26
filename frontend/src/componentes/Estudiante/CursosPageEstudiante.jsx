@@ -2,18 +2,23 @@ import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import { apiFetch } from "../Profesor/api";
 import { imagenesRandom } from './scripts/fotos'
+import { MiniComponenteLoading } from "../PantallaLoading/ComponenteLoading";
 
 const CursosPageStudent = () => {
   const [ cursos, setCursos ] = useState([])
   const navigate = useNavigate()
+  const [ requestFinalizada, setRequestFinalizada ] = useState(false)
 
   useEffect(()=>{
-    apiFetch("/estudiante/cursos/", ).then(setCursos); 
+      apiFetch("/estudiante/cursos/", ).then(setCursos).catch(setRequestFinalizada(true)); 
+      setRequestFinalizada(true)
   }, [])
 
   const verCurso = (id) =>{
     navigate(`/estudiante/cursos/${id}`)
   }
+
+  if(!requestFinalizada && cursos.length === 0)return <><MiniComponenteLoading /></>
 
   return (
     <div className="text-xs md:text-base xl:text-2xl flex flex-wrap items-center justify-evenly w-full h-full gap-4">
@@ -31,7 +36,7 @@ const CursosPageStudent = () => {
             </div>
         </div>
       ))
-      : <p>cargando...</p>
+      : <p>No tienes cursos asignados aún...</p>
     }
     </div>
   );

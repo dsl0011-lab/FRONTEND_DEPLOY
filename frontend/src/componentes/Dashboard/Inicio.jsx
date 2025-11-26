@@ -4,11 +4,12 @@ import { Link } from "react-router-dom"
 import { apiFetch, getTutorias } from "../Profesor/api"
 import CalendarioTareas from "./CalendarioTareas"
 import { MiniComponenteLoading } from '../PantallaLoading/ComponenteLoading'
+// import { API_BASE } from "../Authorization/scripts/Security"
 
 const Inicio = () => {
   const { usuario } = useContext(UsuarioContext)
 
-  const [loading] = useState(false)
+  // const [loading] = useState(false)
   const [err, setErr] = useState("")
   const [ requestFinalizada, setRequestFinalizada ] = useState(false)
   // Datos para alumno
@@ -23,6 +24,7 @@ const Inicio = () => {
 
   useEffect(() => {
     let alive = true
+    const role = usuario?.role === "T" ? "profesor" : usuario?.role === "S" && "estudiante"
     async function load() {
       setErr("")
       try {
@@ -40,8 +42,8 @@ const Inicio = () => {
           setTareas(all)
         } else if (usuario?.role === "T" || usuario?.role === "A") {
           const [cs, ts] = await Promise.all([
-            apiFetch("/profesor/cursos/").catch(() => []),
-            apiFetch("/profesor/tareas/").catch(() => []),
+            apiFetch(`/${role}/cursos/`).catch(() => []),
+            apiFetch(`/${role}/tareas/`).catch(() => []),
           ])
           if (!alive) return
           const listCursos = Array.isArray(cs)
@@ -57,7 +59,7 @@ const Inicio = () => {
           setMisCursosImpartidos(listCursos)
           setMisTareas(listTareas)
         }
-        const tutorias = await getTutorias().catch(() => [])
+        const tutorias = await getTutorias(usuario?.role).catch(() => [])
         if (!alive) return
         setTutoriasAgenda(Array.isArray(tutorias) ? tutorias : [])
       } catch {
@@ -65,13 +67,16 @@ const Inicio = () => {
           setErr("No se pudo cargar el resumen")
           setRequestFinalizada(true)
         } 
+      }finally{
+        setRequestFinalizada(true)
       }
     }
     load()
     return () => {
       alive = false
     }
-  }, [usuario?.role, requestFinalizada])
+  }, [usuario?.role, setRequestFinalizada])
+
 
 
   const bienvenida = useMemo(() => {
@@ -94,15 +99,21 @@ const Inicio = () => {
     return withDate.slice(0, 5)
   }, [tareas])
 
+  if((tareas.length === 0 && cursos.length === 0 &&  usuario?.role === "S" && tutoriasAgenda.length === 0 && !requestFinalizada && err !== "") ||
+    (tutoriasAgenda.length === 0 && misCursosImpartidos.length === 0 && usuario?.role === "T" && !requestFinalizada && err !== "")    
+  ){
+    return(
+      <><MiniComponenteLoading /></>
+    )
+  }
+
   return (
     <section className="w-full">
       <div className="text-white text-2xl mb-4">{bienvenida}</div>
 
-      {err && <div className="text-sm text-red-400 mb-3">{err}</div>}
-
       {/* Resumen para Alumno */}
-      {usuario?.role === "S" && !loading && (
-        err !== "No se pudo cargar el resumen" && requestFinalizada === true ? (<MiniComponenteLoading />) : (
+      {usuario?.role === "S" && (
+
           <div className="grid gap-4 md:grid-cols-3 items-start">
             <div className="p-4 rounded-lg bg-gray-800 text-white">
               <div className="text-sm opacity-70">Asignaturas inscritas</div>
@@ -141,7 +152,7 @@ const Inicio = () => {
             </div>
           </div>
 
-        ))}
+        )}
 
       {/* Resumen para Profesor/Admin */}
       {(usuario?.role === "T" || usuario?.role === "A") && (
@@ -178,7 +189,6 @@ const Inicio = () => {
         </div>
       )}
 
-      {!loading ? <CalendarioTareas/> : (
         <div className="mt-6">
           <CalendarioTareas
             tareas={usuario?.role === "S" ? tareas : misTareas}
@@ -186,7 +196,6 @@ const Inicio = () => {
             tutorias={tutoriasAgenda}
           />
         </div>
-      )}
     </section>
   )
 }

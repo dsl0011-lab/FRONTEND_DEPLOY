@@ -1,12 +1,19 @@
 import { useEffect, useState } from "react";
 import { apiFetch } from '../Profesor/api';
 import { convertirFecha } from './scripts/conversionFecha'
+import { MiniComponenteLoading } from "../PantallaLoading/ComponenteLoading";
 
 const TareasEstudiante = () => {
-const [tareas, setTareas] = useState([]);
-    useEffect(() => { apiFetch("/estudiante/tareas/").then(setTareas) }, []);
+const [ tareas, setTareas] = useState([]);
+const [ requestFinalizada, setRequestFinalizada ] = useState(false)
+useEffect(() => { 
+    apiFetch("/estudiante/tareas/").then(setTareas).catch(setRequestFinalizada(true)) 
+    setRequestFinalizada(true)
+}, []);
 
-    return (
+if(!requestFinalizada && tareas.length === 0) return <><MiniComponenteLoading /></>
+
+return (
         <div className='w-full h-full min-h-64 bg-gray-900 p-4 text-xs md:text-base rounded-2xl'>
             <h3 className="font-bold text-center mb-3">Tareas (todas mis clases)</h3>
             {

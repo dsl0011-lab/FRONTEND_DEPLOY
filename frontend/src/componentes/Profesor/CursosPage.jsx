@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { apiFetch } from "./api";
 export default function CursosPage() {
-  // const token = localStorage.getItem("token");
   const [cursos, setCursos] = useState([]);
   const [form, setForm] = useState({ nombre: "", descripcion: "" });
 

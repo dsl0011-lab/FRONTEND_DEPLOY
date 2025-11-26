@@ -6,16 +6,17 @@ import Aside from "./ComponentesEsqueletoTutorias/Aside";
 import SectionsTutorias from "./ComponentesEsqueletoTutorias/SectionsTutorias";
 import Header from "./ComponentesEsqueletoTutorias/Header";
 import { createTutoriaEstudiante } from "./scriptsTutorias";
+import { MiniComponenteLoading } from "../PantallaLoading/ComponenteLoading";
 
 export default function TutoriasEsqueleto() {
   const { usuario } = useContext(UsuarioContext);
   const [tutorias, setTutorias] = useState([]);
   const [ refrescarTutorias, setRefrescarTutorias ] = useState(false)
-  // const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [cursosDisponibles, setCursosDisponibles] = useState([]);
   const puedeCrear =  usuario?.role === "S";
+  const [ requestFinalizada, setRequestFinalizada ] = useState(false)
 
   useEffect(() => {
     let alive = true;
@@ -39,6 +40,9 @@ export default function TutoriasEsqueleto() {
         setTutorias(Array.isArray(listaOrdenada) ? listaOrdenada : []);
       } catch (err) {
         if (alive) setError(err.message || "No se pudieron cargar las tutorias");
+        setRequestFinalizada(true)
+      }finally{
+          setRequestFinalizada(true)
       }
     })();
     setRefrescarTutorias(false)
@@ -142,6 +146,7 @@ export default function TutoriasEsqueleto() {
     }
   };
 
+    if(!requestFinalizada) return(<><MiniComponenteLoading /></>)
 
   return (
     <div className="w-full max-w-6xl mx-auto p-4 md:p-6 text-white">

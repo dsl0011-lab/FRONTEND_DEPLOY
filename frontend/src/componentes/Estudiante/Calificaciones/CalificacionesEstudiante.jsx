@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from "axios";
 import { API_BASE } from '../../Authorization/scripts/Security';
+import { MiniComponenteLoading } from '../../PantallaLoading/ComponenteLoading';
 
 const CalificacionesEstudiante = () => {
   const [calificaciones, setCalificaciones] = useState([]);
   const [estadisticas, setEstadisticas] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [requestFinalizada, setRequestFinalizada] = useState(false);
   const [vistaActual, setVistaActual] = useState('calificaciones');
   const [cursoSeleccionado, setCursoSeleccionado] = useState('todos');
 
@@ -16,26 +17,26 @@ const CalificacionesEstudiante = () => {
 
   const cargarDatos = async () => {
     try {
-      setLoading(true);
       const config = {
         withCredentials: true,
       };
 
       const respCalif = await axios.get(
-        (`${API_BASE}/api/calificaciones/notas/`),
+        (`${API_BASE}api/calificaciones/notas/`),
         config
       );
       setCalificaciones(respCalif.data);
 
       const respEstad = await axios.get(
-        `${API_BASE}/api/calificaciones/notas/estadisticas/`,
+        `${API_BASE}api/calificaciones/notas/estadisticas/`,
         config
       );
       setEstadisticas(respEstad.data);
     } catch (error) {
       console.error('Error al cargar calificaciones:', error);
+      setRequestFinalizada(true);
     } finally {
-      setLoading(false);
+      setRequestFinalizada(true);
     }
   };
 
@@ -63,11 +64,9 @@ const CalificacionesEstudiante = () => {
 
   const cursosUnicos = [...new Set(calificaciones.map(c => c.curso))];
 
-  if (loading) {
+  if (requestFinalizada) {
     return (
-      <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-      </div>
+        <><MiniComponenteLoading /></>
     );
   }
 

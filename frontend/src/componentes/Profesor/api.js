@@ -62,6 +62,27 @@ export async function apiFetch(path, opts = {}, retry = false) {
   }
 }
 
+
+export async function calificar(endPoint, {payload}){
+  const url = buildUrl(endPoint);
+  const res = await fetch(url, {
+    credentials: 'include',                // Cookies HttpOnly
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    method: 'PATCH',
+    body: JSON.stringify(payload)
+  });
+  if (res.status === 401) {
+    const refreshed = await secureFetch();
+    if (refreshed) {
+      return apiFetch(url, {method: 'PATCH', body: payload}); // reintento una sola vez
+    }
+  }
+  return res.json()
+}
+
 export async function getResumenAlumnos() {
   const url = buildUrl("/profesor/cursos/resumen-alumnos/");
   const res = await fetch(url, {
@@ -109,8 +130,11 @@ export async function deleteTarea(id) {
   return true;
 }
 
-export async function getTutorias(){
-  const url = `/profesor/tutorias/`
+export async function getTutorias(esEstudiante){
+  let url = `/profesor/tutorias/`
+  if(esEstudiante === "S"){
+    url = `/estudiante/tutorias/`
+  }
   let res = apiFetch(url);
   if (res.status === 401) {
     const refreshed = await secureFetch();

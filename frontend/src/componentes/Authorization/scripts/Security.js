@@ -1,5 +1,6 @@
 //cierra la sesion eliminando el token valido de la cookie HTTP actual del usuario loggeado 
-const API_BASE = "http://localhost:8000/"
+const API_BASE = 'http://127.0.0.1:8000/'
+// "https://api-deploy-wyep.onrender.com/"
 
 
 const Logout = () => {

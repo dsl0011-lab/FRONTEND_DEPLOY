@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { UsuarioContext } from "../useContext/UsuarioContext";
 import { apiFetch } from "../Profesor/api";
-import { ComponenteLoading } from '../PantallaLoading/ComponenteLoading';
+import { ComponenteLoading, MiniComponenteLoading } from '../PantallaLoading/ComponenteLoading';
 import HelpElement from '../Authorization/HelpElement'
 
 const Perfil = () => {
@@ -243,13 +243,14 @@ const Perfil = () => {
   };
 
   if (!usuario?.role || loading) {
-    return <ComponenteLoading />
+    return <MiniComponenteLoading />
   }
 
   const labelAsignaturas =
     usuario.role === "S" ? "Asignaturas inscritas" : "Asignaturas";
 
   return (
+    <>
     <div className="w-full max-w-4xl mx-auto space-y-6">
       {/* Tarjeta principal */}
       <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow relative">
@@ -510,6 +511,7 @@ const Perfil = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 
