@@ -79,6 +79,7 @@ const Inicio = () => {
 
 
 
+
   const bienvenida = useMemo(() => {
     const nombre = `${usuario.first_name || ""} ${usuario.last_name || ""}`.trim() || usuario.username
     if (usuario.gender === "F") return `Bienvenida ${nombre}`

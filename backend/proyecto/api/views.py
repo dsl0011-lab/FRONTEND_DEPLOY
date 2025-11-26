@@ -187,7 +187,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             "last_name": self.user.last_name,
             "email": self.user.email
         })
-        # si usas cookie HttpOnly, puedes ocultarlos en el body:
+        # se eliminan del body y solo se manejan por http
         data.pop("access", None)
         data.pop("refresh", None)
         return data
@@ -232,7 +232,6 @@ def tareas_curso_para_alumno(request, curso_id: int):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
     def post(self, request, *args, **kwargs):
-        print(request.data)
         serializer = self.get_serializer(data=request.data)
         try:
             serializer.is_valid(raise_exception=True)
@@ -304,5 +303,6 @@ def Create_http_cookie(response, access_token=None, refresh_token=None, recordar
             secure=True,
             samesite="None",
             path="/",
+            
         )
     return response

@@ -4,7 +4,6 @@ from django.contrib.auth import authenticate
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from .models import UsuarioPersonalizado
 
-
 class RegistroSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True)
     role = serializers.CharField(read_only=True)  # se devuelve, pero NO se acepta
