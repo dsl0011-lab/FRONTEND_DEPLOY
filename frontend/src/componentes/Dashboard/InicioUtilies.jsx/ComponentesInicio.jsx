@@ -23,7 +23,7 @@ export default function ComponentesInicio({ tareas, cursos, loading, usuario }) 
             <div className="text-sm opacity-70">Asignaturas inscritas</div>
             <div className="text-3xl font-bold">{cursos.length}</div>
             <Link
-                to="/asignaturas"
+                to="/estudiante"
                 className="text-blue-400 hover:underline mt-2 inline-block"
             >
                 Ver asignaturas
@@ -51,7 +51,7 @@ export default function ComponentesInicio({ tareas, cursos, loading, usuario }) 
         <div className="p-4 rounded-lg bg-gray-800 text-white md:col-span-2">
             <div className="flex items-center justify-between mb-2">
                 <div className="text-sm opacity-70">Próximas tareas</div>
-                <Link to="/asignaturas" className="text-blue-400 hover:underline">
+                <Link to="/estudiante/tareas" className="text-blue-400 hover:underline">
                     Ver todas
                 </Link>
             </div>

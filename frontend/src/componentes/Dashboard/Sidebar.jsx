@@ -47,11 +47,11 @@ const Sidebar = () => {
           <img src={cursos} className="mdh:w-6/12 mdh:h-6/12 w-[45px] h-[45px]" />
           <p className="w-12/12 h-6/12 mdh:w-fit mdh:h-fit text-lg">Panel Estudiante</p>
         </button>
-
           ) : (
             // aqui se podra colocar la ruta para un componente admin dentro de la app
-            <p>Panel Admin</p>
-        )))
+            <></>
+        )
+      ))
       }
       </nav>
     </aside>

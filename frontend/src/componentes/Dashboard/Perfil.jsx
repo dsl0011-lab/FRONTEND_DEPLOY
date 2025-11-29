@@ -359,7 +359,7 @@ const Perfil = () => {
           >
             Inicio
           </Link>
-          {(usuario.role === "T" || usuario.role === "A") && (
+          {(usuario.role === "T") && (
             <Link
               to="/profesor"
               className="px-3 py-1.5 rounded-full text-sm font-medium bg-indigo-500/10 text-indigo-400 border border-indigo-500/40 hover:bg-indigo-500/20 transition-colors"

@@ -49,6 +49,7 @@ export default function PanelAdmin({ usuarioValidado }) {
         alumnos = usuarios.filter((u) => u.role === "S");
     }
 
+
     return (
         <main className="w-full h-full relative flex items-center justify-start text-xs md:text-base flex-col bg-gray-900 border-2 border-gray-700 rounded-2xl xs:p-4 text-white">
             {editarUsuarios && <EditarUsuarios setEditarUsuarios={setEditarUsuarios} usuarioElegido={usuarioElegido} setUsuarios={setUsuarios} usuarios={usuarios} actualizarUsuarios={actualizarUsuarios} />}
@@ -128,7 +129,7 @@ export default function PanelAdmin({ usuarioValidado }) {
                                     <p>Usuario: {usuario.username}</p>
                                     <p>Rol: {usuario?.role}</p>
                                     <p>Email: {usuario?.email}</p>
-                                    <p>Super usuario: {usuario?.is_superuser === "true" ? "si" : "no"}</p>
+                                    <p>Super usuario: {usuario?.is_superuser === true ? "si" : "no"}</p>
                                     <p>Staff: {usuario?.is_superuser === true ? "si" : "no"}</p>
                                     <div className="w-full h-auto flex items-center justify-center gap-2">
                                         <button onClick={() => { setEditarUsuarios(prev => !prev), setUsuarioElegido(usuario) }}
