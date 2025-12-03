@@ -139,6 +139,7 @@ const Login = ({ setFlipped, funcUsuario, setError, error, setRequestFinalizada,
                         <input
                             type={mostrarPassword ? "text" : "password"} placeholder="Ingresa tu contraseña" name="passwrodL" id="passwordL" onMouseOver={() => setHelp(prev => !prev)} onMouseOut={() => setHelp(prev => !prev)}
                             className="w-full  max-h-16 text-white bg-gray-50 border border-gray-300 rounded-2xl h-auto p-1.5 sm:p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[^\w\s]).+$" minLength={8} maxLength={30} 
                         />
                         <button type="button" onClick={() => setMostrarPassword(prev => !prev)} className="absolute right-3 top-1/2 -translate-y-1/2">
                             {mostrarPassword

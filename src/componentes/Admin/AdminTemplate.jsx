@@ -90,7 +90,7 @@ export default function AdminTemplate() {
                                 <input
                                     type={mostrarPassword ? "text" : "password"}
                                     placeholder='Ingresa contraseña admin'
-                                    name="password"
+                                    name="password" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[^\w\s]).+$" minLength={8} maxLength={30} 
                                     id='password'
                                     className="flex-1 text-white bg-gray-50 border border-gray-300 rounded-2xl w-full h-auto p-1.5 sm:p-2 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                                     required
