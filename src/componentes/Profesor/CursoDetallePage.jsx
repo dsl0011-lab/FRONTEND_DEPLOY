@@ -9,6 +9,15 @@ export default function CursoDetallePage() {
   const [titulo, setTitulo] = useState("")
   const [fechaEntrega, setFechaEntrega] = useState("")
   const [alumnoId, setAlumnoId] = useState("")
+  const [alumnosCursandoAsignatura, setAlumnosCursandoAsignatura] = useState([])
+
+
+  useEffect(()=>{
+    if(curso){
+      setAlumnosCursandoAsignatura(curso?.alumnos_no_matriculados.filter((alumno)=> (alumno.role === 'S')))      
+    }
+  },[curso])
+
 
   useEffect(() => {
     let alive = true
@@ -36,6 +45,7 @@ export default function CursoDetallePage() {
     }
   }, [id])
 
+
   const crearTarea = async (e) => {
     e.preventDefault()
     if (!titulo.trim()) return
@@ -57,6 +67,7 @@ export default function CursoDetallePage() {
     setTitulo("")
     setFechaEntrega("")
   }
+
 
   const matricular = async (e) => {
     e.preventDefault()
@@ -110,14 +121,24 @@ export default function CursoDetallePage() {
         </ul>
       </section>
       <section className="space-y-3">
-        <h2 className="font-semibold">Matricular alumno (por id)</h2>
+        <h2 className="font-semibold">Matricular alumno</h2>
         <form onSubmit={matricular} className="flex gap-2">
           <input
             className="text-white bg-gray-50 border border-gray-300 rounded-2xl w-full max-w-60 h-auto p-0.5 sm:p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
             placeholder="id usuario"
-            value={alumnoId}
+            value={alumnoId} list="estudiantesSugerido"
             onChange={(e) => setAlumnoId(e.target.value)}
-          />
+          />{alumnosCursandoAsignatura.length > 0 &&
+            <datalist id="estudiantesSugerido">
+            {alumnosCursandoAsignatura.map((alumno) => (
+              <option
+              key={alumno.id}
+              value={alumno.id}
+              >
+                {alumno?.first_name + " " + alumno?.last_name}
+              </option>
+            ))}
+          </datalist>}
           <button className="px-4 py-2 rounded border">Matricular</button>
         </form>
       </section>

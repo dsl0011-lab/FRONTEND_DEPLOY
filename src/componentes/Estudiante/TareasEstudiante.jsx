@@ -44,7 +44,7 @@ const TareasEstudiante = () => {
             return (
               <li
                 key={t.id}
-                className="flex-1 flex flex-col gap-2 border-double border-2 border-sky-950 p-4 rounded-3xl md:min-w-[500px] xs:min-w-[250px] min-w-[150px]"
+                className="flex-1 flex flex-col gap-2 border-double border-2 border-sky-950 p-4 rounded-3xl max-w-[400px] md:min-w-[500px] xs:min-w-[250px] min-w-[150px]"
               >
                 <div className="flex-1 flex flex-col gap-2 font-semibold">
                   <p className="rounded-md border-double border-2 border-cyan-950 p-2">
@@ -90,7 +90,7 @@ const TareasEstudiante = () => {
       {/* Modal entrega */}
       {selected && (
         <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
-          <div className="bg-gray-900 border border-gray-700 rounded-xl p-4 w-full max-w-md">
+          <div className="bg-gray-900 border border-gray-700 rounded-xl p-4 w-4/12">
             <h3 className="text-lg font-semibold mb-2 text-white">
               Entregar tarea: {selected.titulo}
             </h3>
